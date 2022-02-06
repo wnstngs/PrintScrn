@@ -6,10 +6,12 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:vm="clr-namespace:PrintScrn.ViewModels"
         xmlns:b="clr-namespace:PrintScrn.Behaviors"
+        xmlns:v="clr-namespace:PrintScrn.Views"
         mc:Ignorable="d"
-        Title="PrintScrn" 
+        Title="Screenshot"
         WindowStyle="None"
         WindowState="Maximized"
+        Icon="../Assets/ScreenshotAppIcon.ico"
         AllowsTransparency="True"
         Opacity="{Binding WindowOpacity}">
     <Window.DataContext>
@@ -60,6 +62,7 @@
                     <ImageBrush Stretch="None"
                                 ImageSource="{Binding SelectedRectImageSource}" />
                 </Rectangle.Fill>
+
                 <Rectangle.Triggers>
                     <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                         <BeginStoryboard>
@@ -78,52 +81,6 @@
             </Rectangle>
         </Canvas>
 
-        <!-- Contains control elements -->
-        <Border Grid.Row="0"
-                Grid.Column="0"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Center"
-                Height="64"
-                BorderThickness="0.4"
-                BorderBrush="Gray">
-            <Border.Background>
-                <ImageBrush ImageSource="/PrintScrn;component/Assets/Texture_Steel_1.jpg"/>
-            </Border.Background>
-
-            <StackPanel Orientation="Horizontal"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Stretch"
-                        Height="60">
-                <Button Width="80"
-                        Content="&#xF407;"
-                        FontSize="20"
-                        FontFamily="Segoe MDL2 Assets"
-                        Margin="2, 1, 2, 1"
-                        ToolTip="Snap Rectangle"
-                        Style="{StaticResource SteelUiPushButton}" />
-                <Button Width="80"
-                        Content="&#xF7ED;"
-                        FontSize="20"
-                        FontFamily="Segoe MDL2 Assets"
-                        Margin="0, 1, 2, 1"
-                        ToolTip="Snap Window"
-                        Style="{StaticResource SteelUiPushButton}" />
-                <Button Width="80"
-                        Content="&#xF8B0;"
-                        FontSize="20"
-                        FontFamily="Segoe MDL2 Assets"
-                        Margin="0, 1, 2, 1"
-                        ToolTip="Configuration"
-                        Style="{StaticResource SteelUiPushButton}" />
-                <Button Width="80"
-                        Content="&#xE8BB;"
-                        FontSize="20"
-                        FontFamily="Segoe MDL2 Assets"
-                        Margin="0, 1, 2, 1"
-                        ToolTip="Close"
-                        Style="{StaticResource SteelUiPushButton}"
-                        Command="{Binding QuitAppCmd}"/>
-            </StackPanel>
-        </Border>
+        <v:ToolbarControl />
     </Grid>
 </Window>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -39,7 +38,6 @@ namespace PrintScrn.Image
                 bmp.PixelFormat
             );
 
-            // @todo FIXME: ArgumentException: Value does not fall within the expected range.
             var bitmapSource = BitmapSource.Create(
                 bitmapData.Width,
                 bitmapData.Height,

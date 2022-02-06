@@ -2,12 +2,12 @@
 
 namespace PrintScrn.Commands
 {
-    public class CommandImpl : BaseCommand
+    public class RelayCommand : BaseCommand
     {
         private readonly Func<object, bool>? _canExecute;
         private readonly Action<object> _execute;
 
-        public CommandImpl(
+        public RelayCommand(
             Action<object> execute,
             Func<object, bool>? canExecute = null
         )

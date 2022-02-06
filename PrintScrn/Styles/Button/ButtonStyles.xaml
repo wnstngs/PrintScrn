@@ -60,4 +60,65 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="SteelUiToggleButton"
+           TargetType="{x:Type ToggleButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="Button_RootLayout"
+                            CornerRadius="0"
+                            BorderThickness="0.1, 0.1, 1, 2"
+                            BorderBrush="Black"
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}">
+                        <Border.Background>
+                            <ImageBrush ImageSource="/PrintScrn;component/Assets/Texture_Steel_1.jpg"/>
+                        </Border.Background>
+                        <Grid x:Name="Button_Mask"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"
+                              Background="Transparent"
+                              Opacity="1">
+                            <Label x:Name="Button_Content"
+                                   Content="{TemplateBinding Content}"
+                                   VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                   HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                   FontWeight="{TemplateBinding FontWeight}"
+                                   FontFamily="{TemplateBinding FontFamily}"
+                                   FontSize="{TemplateBinding FontSize}"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Stretch" />
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked"
+                                 Value="True">
+                            <Setter Property="RenderTransformOrigin"
+                                    TargetName="Button_RootLayout"
+                                    Value=".75, 1.25"/>
+                            <Setter Property="BorderThickness"
+                                    TargetName="Button_RootLayout"
+                                    Value="1.5, 1, 0.3, 0.3"/>
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter TargetName="Button_Mask"
+                                    Property="Opacity"
+                                    Value="0.4" />
+                            <Setter TargetName="Button_Content"
+                                    Property="Opacity"
+                                    Value="0.4" />
+                            <Setter TargetName="Button_Mask"
+                                    Property="Background"
+                                    Value="White" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

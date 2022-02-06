@@ -6,11 +6,17 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <ApplicationIcon>ScreenshotAppIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\ScreenshotAppIcon.ico" />
     <None Remove="Assets\Texture_Steel_1.jpg" />
     <None Remove="Assets\Texture_Steel_2.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ScreenshotAppIcon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\ScreenshotAppIcon.ico" />
     <Resource Include="Assets\Texture_Steel_1.jpg" />
     <Resource Include="Assets\Texture_Steel_2.jpg" />
   </ItemGroup>

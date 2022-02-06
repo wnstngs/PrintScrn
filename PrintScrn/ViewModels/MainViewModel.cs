@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -20,17 +18,19 @@ namespace PrintScrn.ViewModels
 
         public MainViewModel()
         {
+            ViewModels.Instance.ViewModelsStore.Add(this);
+
             // TODO: Get width and height of the monitor where window is.
             // We can't use PrintScrn.Native.Win32Fn.GetMonitorRectFromWindow() as it
             // is using GetMonitorFromWindow, but window isn't initialized yet.
             MonitorWidth = 2560;
             MonitorHeight = 1440;
 
-            OnInitCmd = new CommandImpl(
+            OnInitCmd = new RelayCommand(
                 OnExecuted_OnInitCmd,
                 CanExecute_OnInitCmd
             );
-            QuitAppCmd = new CommandImpl(
+            QuitAppCmd = new RelayCommand(
                 OnExecuted_QuitAppCmd,
                 CanExecute_QuitAppCmd
             );
@@ -121,6 +121,31 @@ namespace PrintScrn.ViewModels
                         Height = (int) Math.Round(_selectedRectHeight)
                     }
                 );
+
+                /* FIXME: With this code get only black rectangle.
+                var gfx = Graphics.FromImage(_fullscreenInitialBitmap);
+
+                System.Drawing.Size sizeToCopy = new(
+                    (int) Math.Round(_selectedRectWidth),
+                    (int) Math.Round(_selectedRectHeight)
+                );
+
+                gfx.CopyFromScreen(
+                    (int) Math.Round(_selectedRectXPosition),
+                    (int) Math.Round(_selectedRectYPosition),
+                    0,
+                    0,
+                    sizeToCopy,
+                    CopyPixelOperation.SourceCopy
+                );
+
+                Bitmap croppedBmp = new(
+                    (int) Math.Round(_selectedRectWidth),
+                    (int) Math.Round(_selectedRectHeight),
+                    gfx
+                );
+                */
+
                 Set(ref _selectedRectImageSource, croppedBitmap);
             }
         }

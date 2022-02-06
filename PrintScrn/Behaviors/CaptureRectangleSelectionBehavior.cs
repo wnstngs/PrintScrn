@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -99,6 +99,13 @@ public class CaptureRectangleSelectionBehavior : Behavior<UIElement>
 
     private void OnMouseDown(object sender, MouseButtonEventArgs e)
     {
+        foreach (var vmToCollapse in ViewModels.ViewModels.Instance.ViewModelsStore)
+        {
+            if (vmToCollapse.GetType() != typeof(ToolbarViewModel)) continue;
+            var toolbarViewModel = (ToolbarViewModel) vmToCollapse;
+            toolbarViewModel.ToolbarVisibility = Visibility.Collapsed;
+        }
+
         InitialXPosition = 0.0;
         InitialYPosition = 0.0;
         SelectedRectWidth = 0.0;
@@ -111,11 +118,6 @@ public class CaptureRectangleSelectionBehavior : Behavior<UIElement>
 
         InitialXPosition = _startPoint.X;
         InitialYPosition = _startPoint.Y;
-
-        if (((AssociatedObject.FindVisualRoot() as Window)?.DataContext) is MainViewModel vm)
-        {
-            vm.SelectedRectImageSource = vm.ScreenImageSource;
-        }
     }
 
     private void OnMouseUp(object sender, MouseButtonEventArgs e)
@@ -127,6 +129,13 @@ public class CaptureRectangleSelectionBehavior : Behavior<UIElement>
         {
             vm.SelectedRectImageSource = vm.ScreenImageSource;
         }
+
+        foreach (var vmToShow in ViewModels.ViewModels.Instance.ViewModelsStore)
+        {
+            if (vmToShow.GetType() != typeof(ToolbarViewModel)) continue;
+            var toolbarViewModel = (ToolbarViewModel)vmToShow;
+            toolbarViewModel.ToolbarVisibility = Visibility.Visible;
+        }
     }
 
     private void OnMouseMove(object sender, MouseEventArgs e)
@@ -135,12 +144,13 @@ public class CaptureRectangleSelectionBehavior : Behavior<UIElement>
 
         var delta = currentPos - _startPoint;
 
-        SelectedRectWidth = delta.X;
-        SelectedRectHeight = delta.Y;
+        SelectedRectWidth = Math.Round(delta.X);
+        SelectedRectHeight = Math.Round(delta.Y);
 
         if (((AssociatedObject.FindVisualRoot() as Window)?.DataContext) is MainViewModel vm)
         {
             vm.SelectedRectImageSource = vm.ScreenImageSource;
         }
+        AssociatedObject.InvalidateVisual();
     }
 }
