@@ -1,5 +1,7 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.IO;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -16,7 +18,13 @@ namespace PrintScrn.Image
             bitmapImage.BeginInit();
             memstream.Seek(0, SeekOrigin.Begin);
             bitmapImage.StreamSource = memstream;
-            bitmapImage.EndInit();
+            try
+            {
+                bitmapImage.EndInit();
+            }
+            catch (Exception e)
+            {
+            }
 
             return bitmapImage;
         }
@@ -33,7 +41,8 @@ namespace PrintScrn.Image
                     0,
                     0,
                     bmp.Width,
-                    bmp.Height),
+                    bmp.Height
+                ),
                 System.Drawing.Imaging.ImageLockMode.ReadOnly,
                 bmp.PixelFormat
             );

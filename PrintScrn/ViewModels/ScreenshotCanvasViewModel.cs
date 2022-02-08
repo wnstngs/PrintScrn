@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using PrintScrn.Capture;
 using PrintScrn.Commands;
 using PrintScrn.Image;
@@ -17,10 +21,6 @@ namespace PrintScrn.ViewModels
             OnInitCmd = new RelayCommand(
                 OnExecuted_OnInitCmd,
                 CanExecute_OnInitCmd
-            );
-            UpdateSelectedRectCmd = new RelayCommand(
-                OnExecuted_UpdateSelectedRectCmd,
-                CanExecute_UpdateSelectedRectCmd
             );
         }
         
@@ -47,7 +47,29 @@ namespace PrintScrn.ViewModels
         public ImageSource? SelectedRectImageSource
         {
             get => _selectedRectImageSource;
-            set => UpdateSelectedRectCmd.Execute(null);
+            set
+            {
+                if (_selectedRectWidthScreenCoords <= 0 || _selectedRectHeightScreenCoords <= 0)
+                {
+                    return;
+                }
+
+                if (_selectedRectXPositionScreenCoords < 0 || _selectedRectYPositionScreenCoords < 0)
+                {
+                    return;
+                }
+
+                var cBmp = _fullscreenInitialBitmap.Crop(
+                    new Rectangle(
+                        (int) Math.Round(_selectedRectXPositionScreenCoords),
+                        (int) Math.Round(_selectedRectYPositionScreenCoords),
+                        (int) Math.Round(_selectedRectWidthScreenCoords),
+                        (int) Math.Round(_selectedRectHeightScreenCoords)
+                    )
+                );
+
+                Set(ref _selectedRectImageSource, cBmp.ToBitmapImage());
+            }
         }
 
         #endregion
@@ -100,6 +122,54 @@ namespace PrintScrn.ViewModels
 
         #endregion
 
+        #region SelectedRectXPositionScreenCoords
+
+        private double _selectedRectXPositionScreenCoords;
+
+        public double SelectedRectXPositionScreenCoords
+        {
+            get => _selectedRectXPositionScreenCoords;
+            set => Set(ref _selectedRectXPositionScreenCoords, value);
+        }
+
+        #endregion
+
+        #region SelectedRectYPositionScreenCoords
+
+        private double _selectedRectYPositionScreenCoords;
+
+        public double SelectedRectYPositionScreenCoords
+        {
+            get => _selectedRectYPositionScreenCoords;
+            set => Set(ref _selectedRectYPositionScreenCoords, value);
+        }
+
+        #endregion
+
+        #region SelectedRectWidthScreenCoords
+
+        private double _selectedRectWidthScreenCoords;
+
+        public double SelectedRectWidthScreenCoords
+        {
+            get => _selectedRectWidthScreenCoords;
+            set => Set(ref _selectedRectWidthScreenCoords, value);
+        }
+
+        #endregion
+
+        #region SelectedRectHeightScreenCoords
+
+        private double _selectedRectHeightScreenCoords;
+
+        public double SelectedRectHeightScreenCoords
+        {
+            get => _selectedRectHeightScreenCoords;
+            set => Set(ref _selectedRectHeightScreenCoords, value);
+        }
+
+        #endregion
+
         #endregion
 
         #region Commands
@@ -120,41 +190,6 @@ namespace PrintScrn.ViewModels
             {
                 ScreenshotCanvasImageSource = _fullscreenInitialBitmap.ToBitmapImage();
             }
-        }
-
-        #endregion
-
-        #region UpdateSelectedRectCmd
-
-        public ICommand UpdateSelectedRectCmd { get; }
-
-        private static bool CanExecute_UpdateSelectedRectCmd(object? p = null)
-        {
-            return true;
-        }
-
-        private void OnExecuted_UpdateSelectedRectCmd(object? p = null)
-        {
-            if (_selectedRectWidth <= 0 || _selectedRectHeight <= 0)
-            {
-                return;
-            }
-
-            if (_selectedRectXPosition < 0 || _selectedRectYPosition < 0)
-            {
-                return;
-            }
-
-            var cBmp = _fullscreenInitialBitmap.Crop(
-                new Rectangle(
-                    (int) Math.Round(_selectedRectXPosition),
-                    (int) Math.Round(_selectedRectYPosition),
-                    (int) Math.Round(_selectedRectWidth),
-                    (int) Math.Round(_selectedRectHeight)
-                )
-            );
-
-            Set(ref _selectedRectImageSource, cBmp.ToBitmapImage());
         }
 
         #endregion
