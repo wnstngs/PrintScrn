@@ -122,7 +122,7 @@ namespace PrintScrn.Native
                 return r.Left == Left && r.Top == Top && r.Right == Right && r.Bottom == Bottom;
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 return obj switch
                 {

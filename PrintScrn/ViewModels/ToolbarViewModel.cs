@@ -1,6 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Input;
-using PrintScrn.Commands;
 
 namespace PrintScrn.ViewModels
 {
@@ -9,11 +7,6 @@ namespace PrintScrn.ViewModels
         public ToolbarViewModel()
         {
             ViewModels.Instance.ViewModelsStore.Add(this);
-
-            QuitAppCmd = new RelayCommand(
-                OnExecuted_QuitAppCmd,
-                CanExecute_QuitAppCmd
-            );
         }
 
         #region Properties
@@ -33,22 +26,6 @@ namespace PrintScrn.ViewModels
         #endregion
 
         #region Commands
-
-        #region QuitAppCmd
-
-        public ICommand QuitAppCmd { get; }
-
-        private static bool CanExecute_QuitAppCmd(object p)
-        {
-            return true;
-        }
-
-        private void OnExecuted_QuitAppCmd(object p)
-        {
-            Application.Current.Shutdown(0);
-        }
-
-        #endregion
 
         #endregion
     }

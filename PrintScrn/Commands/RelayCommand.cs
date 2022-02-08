@@ -16,19 +16,19 @@ namespace PrintScrn.Commands
             _canExecute = canExecute;
         }
 
-        public override bool CanExecute(object parameter)
+        public override bool CanExecute(object? parameter)
         {
-            return _canExecute?.Invoke(parameter) ?? true;
+            return _canExecute?.Invoke(parameter!) ?? true;
         }
 
-        public override void Execute(object parameter)
+        public override void Execute(object? parameter)
         {
             if (!CanExecute(parameter))
             {
                 return;
             }
 
-            _execute(parameter);
+            _execute(parameter!);
         }
     }
 }

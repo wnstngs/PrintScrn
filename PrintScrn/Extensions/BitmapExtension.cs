@@ -5,7 +5,7 @@ using System.Windows.Media.Imaging;
 
 namespace PrintScrn.Image
 {
-    public static class BitmapHelper
+    public static class BitmapExtension
     {
         public static BitmapImage? ToBitmapImage(this Bitmap? bmp)
         {
@@ -53,6 +53,23 @@ namespace PrintScrn.Image
             bmp.UnlockBits(bitmapData);
 
             return bitmapSource;
+        }
+
+        public static Bitmap? Crop(this Bitmap? bmp, Rectangle rect)
+        {
+            if (
+                bmp != null &&
+                rect.X >= 0 &&
+                rect.Y >= 0 &&
+                rect.Width > 0 &&
+                rect.Height > 0 &&
+                new Rectangle(0, 0, bmp.Width, bmp.Height).Contains(rect)
+            )
+            {
+                return bmp.Clone(rect, bmp.PixelFormat);
+            }
+
+            return null;
         }
     }
 }

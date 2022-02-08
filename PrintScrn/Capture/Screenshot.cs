@@ -3,7 +3,7 @@ using PrintScrn.Native;
 
 namespace PrintScrn.Capture
 {
-    public static class Snapshot
+    public static class Screenshot
     {
         public static Bitmap? Fullscreen()
         {
@@ -18,7 +18,7 @@ namespace PrintScrn.Capture
 
         private static Bitmap? _Snapshot(Win32Type.RECT rect)
         {
-            var desktopWindow = Win32Fn.GetDesktopWindow();
+            var desktopWindow = Win32Fn.GetDesktopWindowSafe();
             Bitmap? bmp = null;
 
             if (rect.Width == 0 || rect.Height == 0)
@@ -26,12 +26,12 @@ namespace PrintScrn.Capture
                 return bmp;
             }
 
-            var hdcSrc = Win32Fn.GetWindowDC(desktopWindow);
-            var hdcDest = Win32Fn.CreateCompatibleDC(hdcSrc);
-            var hBitmap = Win32Fn.CreateCompatibleBitmap(hdcSrc, rect.Width, rect.Height);
-            var hOld = Win32Fn.SelectObject(hdcDest, hBitmap);
+            var hdcSrc = Win32Fn.GetWindowDcSafe(desktopWindow);
+            var hdcDest = Win32Fn.CreateCompatibleDcSafe(hdcSrc);
+            var hBitmap = Win32Fn.CreateCompatibleBitmapSafe(hdcSrc, rect.Width, rect.Height);
+            var hOld = Win32Fn.SelectObjectSafe(hdcDest, hBitmap);
 
-            Win32Fn.BitBlt(
+            Win32Fn.BitBltSafe(
                 hdcDest,
                 0,
                 0,
@@ -43,13 +43,13 @@ namespace PrintScrn.Capture
                 Win32Type.TernaryRasterOperations.SRCCOPY | Win32Type.TernaryRasterOperations.CAPTUREBLT
             );
 
-            Win32Fn.SelectObject(hdcDest, hOld);
-            Win32Fn.DeleteDC(hdcDest);
-            Win32Fn.ReleaseDC(desktopWindow, hdcSrc);
+            Win32Fn.SelectObjectSafe(hdcDest, hOld);
+            Win32Fn.DeleteDcSafe(hdcDest);
+            Win32Fn.ReleaseDcSafe(desktopWindow, hdcSrc);
 
             bmp = System.Drawing.Image.FromHbitmap(hBitmap);
 
-            Win32Fn.DeleteObject(hBitmap);
+            Win32Fn.DeleteObjectSafe(hBitmap);
 
             return bmp;
         }

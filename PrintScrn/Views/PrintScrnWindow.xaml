@@ -1,4 +1,5 @@
-﻿<Window x:Class="PrintScrn.Views.PrintScrnWindow"
+﻿<Window x:Name="StartupWindow"
+        x:Class="PrintScrn.Views.PrintScrnWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -15,72 +16,22 @@
         AllowsTransparency="True"
         Opacity="{Binding WindowOpacity}">
     <Window.DataContext>
-        <vm:MainViewModel />
+        <vm:PrintScrnWindowViewModel />
     </Window.DataContext>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding OnInitCmd}"/>
+            <i:InvokeCommandAction Command="{Binding OnInitCmd}"
+                                   CommandParameter="{Binding ElementName=StartupWindow}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
     <Grid>
-        <Canvas Name="ScreenshotCanvas"
-                Grid.Row="0"
-                Grid.Column="0"
-                VerticalAlignment="Stretch"
-                HorizontalAlignment="Stretch"
-                Cursor="Cross">
-            <Canvas.Background>
-                <ImageBrush ImageSource="{Binding ScreenImageSource}"
-                            Stretch="None" />
-            </Canvas.Background>
-            <i:Interaction.Behaviors>
-                <b:CaptureRectangleSelectionBehavior InitialXPosition="{Binding SelectedRectXPosition, Mode=OneWayToSource}" 
-                                                     InitialYPosition="{Binding SelectedRectYPosition, Mode=OneWayToSource}"
-                                                     SelectedRectWidth="{Binding SelectedRectWidth, Mode=OneWayToSource}"
-                                                     SelectedRectHeight="{Binding SelectedRectHeight, Mode=OneWayToSource}" />
-            </i:Interaction.Behaviors>
+        <v:ScreenshotCanvas Grid.Row="0"
+                            Grid.Column="0"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch" />
 
-            <!-- Needed to create a blacking-out effect -->
-            <Rectangle Width="{Binding MonitorWidth}"
-                       Height="{Binding MonitorHeight}"
-                       Fill="Black" 
-                       Opacity="0.4" />
-
-            <!-- Rectangle which user selects to capture -->
-            <Rectangle Canvas.Top="{Binding SelectedRectYPosition}"
-                       Canvas.Left="{Binding SelectedRectXPosition}"
-                       Width="{Binding SelectedRectWidth}"
-                       Height="{Binding SelectedRectHeight}"
-                       Stroke="LightGray"
-                       StrokeThickness="1"
-                       StrokeDashArray="10"
-                       StrokeDashOffset="4"
-                       StrokeDashCap="Round"
-                       SnapsToDevicePixels="True">
-                <Rectangle.Fill>
-                    <ImageBrush Stretch="None"
-                                ImageSource="{Binding SelectedRectImageSource}" />
-                </Rectangle.Fill>
-
-                <Rectangle.Triggers>
-                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation
-                                    From="0"
-                                    To="20"
-                                    RepeatBehavior="Forever"
-                                    By="1"
-                                    SpeedRatio="1.1"
-                                    Storyboard.TargetProperty="StrokeDashOffset" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Rectangle.Triggers>
-            </Rectangle>
-        </Canvas>
-
-        <v:ToolbarControl />
+        <v:ToolbarControl Grid.Row="0"
+                          Grid.Column="0" />
     </Grid>
 </Window>

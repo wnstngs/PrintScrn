@@ -22,7 +22,7 @@ namespace PrintScrn.Capture
                 throw new Win32Exception();
             }
 
-            var hMonitor = Win32Fn.MonitorFromWindow(hwnd, Win32Constant.MONITOR_DEFAULTTOPRIMARY);
+            var hMonitor = Win32Fn.MonitorFromWindowSafe(hwnd, Win32Constant.MONITOR_DEFAULTTOPRIMARY);
             if (hMonitor == IntPtr.Zero)
             {
                 throw new Win32Exception();
@@ -30,10 +30,10 @@ namespace PrintScrn.Capture
 
             Win32Type.MONITORINFOEX monitorInfo = new();
             monitorInfo.Size = Marshal.SizeOf(monitorInfo);
-            Win32Fn.GetMonitorInfo(hMonitor, ref monitorInfo);
+            Win32Fn.GetMonitorInfoSafe(hMonitor, ref monitorInfo);
 
             var rect = monitorInfo.Monitor;
-            Win32Fn.DeleteObject(hMonitor);
+            Win32Fn.DeleteObjectSafe(hMonitor);
 
             return rect;
         }

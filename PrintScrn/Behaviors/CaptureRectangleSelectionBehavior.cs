@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Xaml.Behaviors;
 using PrintScrn.Extensions;
@@ -10,7 +9,6 @@ namespace PrintScrn.Behaviors;
 
 public class CaptureRectangleSelectionBehavior : Behavior<UIElement>
 {
-    private Canvas? _canvas;
     private Point _startPoint;
 
     #region Properties
@@ -99,10 +97,10 @@ public class CaptureRectangleSelectionBehavior : Behavior<UIElement>
 
     private void OnMouseDown(object sender, MouseButtonEventArgs e)
     {
-        foreach (var vmToCollapse in ViewModels.ViewModels.Instance.ViewModelsStore)
+        foreach (var vm in ViewModels.ViewModels.Instance.ViewModelsStore)
         {
-            if (vmToCollapse.GetType() != typeof(ToolbarViewModel)) continue;
-            var toolbarViewModel = (ToolbarViewModel) vmToCollapse;
+            if (vm.GetType() != typeof(ToolbarViewModel)) continue;
+            var toolbarViewModel = (ToolbarViewModel) vm;
             toolbarViewModel.ToolbarVisibility = Visibility.Collapsed;
         }
 
@@ -118,6 +116,9 @@ public class CaptureRectangleSelectionBehavior : Behavior<UIElement>
 
         InitialXPosition = _startPoint.X;
         InitialYPosition = _startPoint.Y;
+
+        var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
+        screenshotCanvasViewModel?.UpdateSelectedRectCmd.Execute(null);
     }
 
     private void OnMouseUp(object sender, MouseButtonEventArgs e)
@@ -125,15 +126,12 @@ public class CaptureRectangleSelectionBehavior : Behavior<UIElement>
         AssociatedObject.MouseMove -= OnMouseMove;
         AssociatedObject.MouseUp -= OnMouseUp;
 
-        if (((AssociatedObject.FindVisualRoot() as Window)?.DataContext) is MainViewModel vm)
-        {
-            vm.SelectedRectImageSource = vm.ScreenImageSource;
-        }
+        var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
+        screenshotCanvasViewModel?.UpdateSelectedRectCmd.Execute(null);
 
-        foreach (var vmToShow in ViewModels.ViewModels.Instance.ViewModelsStore)
+        var toolbarViewModel = ViewModelsExtension.FindViewModel<ToolbarViewModel>();
+        if (toolbarViewModel != null)
         {
-            if (vmToShow.GetType() != typeof(ToolbarViewModel)) continue;
-            var toolbarViewModel = (ToolbarViewModel)vmToShow;
             toolbarViewModel.ToolbarVisibility = Visibility.Visible;
         }
     }
@@ -147,10 +145,9 @@ public class CaptureRectangleSelectionBehavior : Behavior<UIElement>
         SelectedRectWidth = Math.Round(delta.X);
         SelectedRectHeight = Math.Round(delta.Y);
 
-        if (((AssociatedObject.FindVisualRoot() as Window)?.DataContext) is MainViewModel vm)
-        {
-            vm.SelectedRectImageSource = vm.ScreenImageSource;
-        }
+        var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
+        screenshotCanvasViewModel?.UpdateSelectedRectCmd.Execute(null);
+
         AssociatedObject.InvalidateVisual();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace PrintScrn.Models
+﻿using System.Windows.Media.Imaging;
+
+namespace PrintScrn.Models
 {
     public class RectangleCaptureArea
     {
@@ -9,5 +11,7 @@
         public int Width { get; set; }
 
         public int Height { get; set; }
+
+        public BitmapImage? Image { get; set; }
     }
 }
