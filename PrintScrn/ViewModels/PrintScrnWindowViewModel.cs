@@ -19,6 +19,11 @@ namespace PrintScrn.ViewModels
             );
         }
 
+        ~PrintScrnWindowViewModel()
+        {
+            ViewModels.Instance.ViewModelsStore.Remove(this);
+        }
+
         #region Properties
 
         #region MonitorWidth
@@ -52,7 +57,19 @@ namespace PrintScrn.ViewModels
         public double WindowOpacity
         {
             get => _windowOpacity;
-            private set => Set(ref _windowOpacity, value);
+            set => Set(ref _windowOpacity, value);
+        }
+
+        #endregion
+
+        #region ShowInTaskbar
+
+        private bool _showInTaskbar = false;
+
+        public bool ShowInTaskbar
+        {
+            get => _showInTaskbar;
+            set => Set(ref _showInTaskbar, value);
         }
 
         #endregion

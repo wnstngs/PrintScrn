@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Xaml.Behaviors;
@@ -153,29 +154,27 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
 
     protected override void OnAttached()
     {
-        AssociatedObject.MouseLeftButtonDown += OnMouseDown;
+        AssociatedObject.MouseDown += OnMouseDown;
     }
 
     protected override void OnDetaching()
     {
-        AssociatedObject.MouseLeftButtonDown -= OnMouseDown;
-        AssociatedObject.MouseMove -= OnMouseMove;
-        AssociatedObject.MouseLeftButtonUp -= OnMouseUp;
+        AssociatedObject.PreviewMouseDown -= OnMouseDown;
+        AssociatedObject.PreviewMouseMove -= OnMouseMove;
+        AssociatedObject.PreviewMouseUp -= OnMouseUp;
     }
 
     private void OnMouseDown(object sender, MouseButtonEventArgs e)
     {
+        if (e.LeftButton != MouseButtonState.Pressed)
+        {
+            return;
+        }
+
         var toolbarViewModel = ViewModelsExtension.FindViewModel<ToolbarViewModel>();
         if (toolbarViewModel != null) toolbarViewModel.ToolbarVisibility = Visibility.Collapsed;
 
-        InitialMouseXPos = 0.0;
-        InitialMouseYPos = 0.0;
-        SelectedRectWidth = 0.0;
-        SelectedRectHeight = 0.0;
-        InitialMouseXPosScreenCoords = 0.0;
-        InitialMouseYPosScreenCoords = 0.0;
-        SelectedRectWidthScreenCoords = 0.0;
-        SelectedRectHeightScreenCoords = 0.0;
+        ResetProperties();
 
         _startPoint = e.GetPosition(AssociatedObject);
 
@@ -201,24 +200,46 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         {
             toolbarViewModel.ToolbarVisibility = Visibility.Visible;
         }
+
+        var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
+        screenshotCanvasViewModel?.ScreenshotSelectedRectCmd.Execute(null);
+
+        ResetProperties();
     }
 
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
+        if (e.LeftButton != MouseButtonState.Pressed)
+        {
+            return;
+        }
+
         var currentPos = e.GetPosition(AssociatedObject);
         var currentPosScreenCoords = AssociatedObject.PointToScreen(e.GetPosition(AssociatedObject));
 
         var delta = currentPos - _startPoint;
         var deltaScreenCoords = currentPosScreenCoords - AssociatedObject.PointToScreen(_startPoint);
 
-        SelectedRectWidth = Math.Round(delta.X);
-        SelectedRectHeight = Math.Round(delta.Y);
-        SelectedRectWidthScreenCoords = Math.Round(deltaScreenCoords.X);
-        SelectedRectHeightScreenCoords = Math.Round(deltaScreenCoords.Y);
+        SelectedRectWidth = Math.Floor(delta.X);
+        SelectedRectHeight = Math.Floor(delta.Y);
+        SelectedRectWidthScreenCoords = Math.Floor(deltaScreenCoords.X);
+        SelectedRectHeightScreenCoords = Math.Floor(deltaScreenCoords.Y);
 
         var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
         if (screenshotCanvasViewModel != null) screenshotCanvasViewModel.SelectedRectImageSource = null;
 
         AssociatedObject.InvalidateVisual();
+    }
+
+    private void ResetProperties()
+    {
+        InitialMouseXPos = 0.0;
+        InitialMouseYPos = 0.0;
+        SelectedRectWidth = 0.0;
+        SelectedRectHeight = 0.0;
+        InitialMouseXPosScreenCoords = 0.0;
+        InitialMouseYPosScreenCoords = 0.0;
+        SelectedRectWidthScreenCoords = 0.0;
+        SelectedRectHeightScreenCoords = 0.0;
     }
 }

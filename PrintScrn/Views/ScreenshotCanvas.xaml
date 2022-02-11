@@ -24,7 +24,8 @@
         x:Name="RootScreenshotCanvas"
         VerticalAlignment="Stretch"
         HorizontalAlignment="Stretch"
-        Cursor="Cross">
+        Cursor="Cross"
+        SnapsToDevicePixels="True" >
         <Canvas.Background>
             <ImageBrush
                 ImageSource="{Binding ScreenshotCanvasImageSource}"
@@ -47,8 +48,9 @@
             HorizontalAlignment="Stretch"
             Width="{Binding ActualWidth, ElementName=RootScreenshotCanvas}"
             Height="{Binding ActualHeight, ElementName=RootScreenshotCanvas}"
-            Fill="Black"
-            Opacity="0.4" />
+            Fill="{Binding MaskRectBackground}"
+            Opacity="{Binding MaskRectOpacity}"
+            SnapsToDevicePixels="True" />
 
         <Rectangle
             Canvas.Top="{Binding SelectedRectYPosition}"
@@ -56,7 +58,7 @@
             Width="{Binding SelectedRectWidth}"
             Height="{Binding SelectedRectHeight}"
             Stroke="LightGray"
-            StrokeThickness="1"
+            StrokeThickness="0.5"
             StrokeDashArray="10"
             StrokeDashOffset="4"
             StrokeDashCap="Round"
@@ -77,7 +79,7 @@
                                 To="20"
                                 RepeatBehavior="Forever"
                                 By="1"
-                                SpeedRatio="1.1"
+                                SpeedRatio="1.05"
                                 Storyboard.TargetProperty="StrokeDashOffset" />
                         </Storyboard>
                     </BeginStoryboard>

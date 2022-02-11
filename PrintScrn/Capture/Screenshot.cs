@@ -8,15 +8,15 @@ namespace PrintScrn.Capture
         public static Bitmap? Fullscreen()
         {
             var monitor = CaptureHelper.GetMonitorRectFromWindow();
-            return _Snapshot(monitor);
+            return TakeScreenshotInternal(monitor);
         }
 
         public static Bitmap? Rectangle(Win32Type.RECT rect)
         {
-            return _Snapshot(rect);
+            return TakeScreenshotInternal(rect);
         }
 
-        private static Bitmap? _Snapshot(Win32Type.RECT rect)
+        private static Bitmap? TakeScreenshotInternal(Win32Type.RECT rect)
         {
             var desktopWindow = Win32Fn.GetDesktopWindowSafe();
             Bitmap? bmp = null;

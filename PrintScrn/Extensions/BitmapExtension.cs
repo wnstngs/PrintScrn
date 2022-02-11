@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace PrintScrn.Image
+namespace PrintScrn.Extensions
 {
     public static class BitmapExtension
     {
@@ -22,8 +22,10 @@ namespace PrintScrn.Image
             {
                 bitmapImage.EndInit();
             }
-            catch (Exception e)
+            catch (Exception)
             {
+                MessageBox.Show("Oops, something went wrong!\n\nin: ToBitmapImage()", "PrintScrn - Screenshot");
+                return null;
             }
 
             return bitmapImage;
@@ -37,7 +39,7 @@ namespace PrintScrn.Image
             }
 
             var bitmapData = bmp.LockBits(
-                new System.Drawing.Rectangle(
+                new Rectangle(
                     0,
                     0,
                     bmp.Width,
@@ -47,19 +49,31 @@ namespace PrintScrn.Image
                 bmp.PixelFormat
             );
 
-            var bitmapSource = BitmapSource.Create(
-                bitmapData.Width,
-                bitmapData.Height,
-                bmp.HorizontalResolution,
-                bmp.VerticalResolution,
-                PixelFormats.Bgr24,
-                null,
-                bitmapData.Scan0,
-                bitmapData.Stride * bitmapData.Height,
-                bitmapData.Stride
-            );
+            BitmapSource? bitmapSource = null;
 
-            bmp.UnlockBits(bitmapData);
+            try
+            {
+                bitmapSource = BitmapSource.Create(
+                    bitmapData.Width,
+                    bitmapData.Height,
+                    bmp.HorizontalResolution,
+                    bmp.VerticalResolution,
+                    PixelFormats.Bgr32,
+                    null,
+                    bitmapData.Scan0,
+                    bitmapData.Stride * bitmapData.Height,
+                    bitmapData.Stride
+                );
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Oops, something went wrong!\n\nin: ToBitmapSource()", "PrintScrn - Screenshot");
+                return bitmapSource;
+            }
+            finally
+            {
+                bmp.UnlockBits(bitmapData);
+            }
 
             return bitmapSource;
         }

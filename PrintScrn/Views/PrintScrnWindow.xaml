@@ -12,6 +12,7 @@
         Title="Screenshot"
         WindowStyle="None"
         WindowState="Maximized"
+        ShowInTaskbar="{Binding ShowInTaskbar}"
         Icon="../Assets/ScreenshotAppIcon.ico"
         AllowsTransparency="True"
         Opacity="{Binding WindowOpacity}">

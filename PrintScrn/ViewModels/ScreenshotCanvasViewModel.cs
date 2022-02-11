@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using PrintScrn.Capture;
 using PrintScrn.Commands;
-using PrintScrn.Image;
+using PrintScrn.Extensions;
 
 namespace PrintScrn.ViewModels
 {
     public class ScreenshotCanvasViewModel : BaseViewModel
     {
+        private const int MinSelectedRectSize = 15;
+
         public ScreenshotCanvasViewModel()
         {
             ViewModels.Instance.ViewModelsStore.Add(this);
@@ -22,11 +21,50 @@ namespace PrintScrn.ViewModels
                 OnExecuted_OnInitCmd,
                 CanExecute_OnInitCmd
             );
+            ScreenshotSelectedRectCmd = new RelayCommand(
+                OnExecuted_ScreenshotSelectedRectCmd,
+                CanExecute_ScreenshotSelectedRectCmd
+            );
+            ScreenshotFullscreenCmd = new RelayCommand(
+                OnExecuted_ScreenshotFullscreenCmd,
+                CanExecute_ScreenshotFullscreenCmd
+            );
+        }
+
+        ~ScreenshotCanvasViewModel()
+        {
+            ViewModels.Instance.ViewModelsStore.Remove(this);
         }
         
         private Bitmap? _fullscreenInitialBitmap;
 
+        private Bitmap? _selectedRectangleBitmap;
+
         #region Properties
+
+        #region MaskRectBackground
+
+        private System.Windows.Media.Brush _maskRectBackground = new SolidColorBrush(Colors.Black);
+
+        public System.Windows.Media.Brush MaskRectBackground
+        {
+            get => _maskRectBackground;
+            set => Set(ref _maskRectBackground, value);
+        }
+
+        #endregion
+
+        #region MaskRectOpacity
+
+        private double _maskRectOpacity = 0.4;
+
+        public double MaskRectOpacity
+        {
+            get => _maskRectOpacity;
+            set => Set(ref _maskRectOpacity, value);
+        }
+
+        #endregion
 
         #region ScreenImageSource
 
@@ -49,7 +87,8 @@ namespace PrintScrn.ViewModels
             get => _selectedRectImageSource;
             set
             {
-                if (_selectedRectWidthScreenCoords <= 0 || _selectedRectHeightScreenCoords <= 0)
+                if (_selectedRectWidthScreenCoords <= MinSelectedRectSize ||
+                    _selectedRectHeightScreenCoords <= MinSelectedRectSize)
                 {
                     return;
                 }
@@ -59,16 +98,16 @@ namespace PrintScrn.ViewModels
                     return;
                 }
 
-                var cBmp = _fullscreenInitialBitmap.Crop(
+                _selectedRectangleBitmap = _fullscreenInitialBitmap.Crop(
                     new Rectangle(
-                        (int) Math.Round(_selectedRectXPositionScreenCoords),
-                        (int) Math.Round(_selectedRectYPositionScreenCoords),
-                        (int) Math.Round(_selectedRectWidthScreenCoords),
-                        (int) Math.Round(_selectedRectHeightScreenCoords)
+                        (int) Math.Floor(_selectedRectXPositionScreenCoords),
+                        (int) Math.Floor(_selectedRectYPositionScreenCoords),
+                        (int) Math.Floor(_selectedRectWidthScreenCoords),
+                        (int) Math.Floor(_selectedRectHeightScreenCoords)
                     )
                 );
 
-                Set(ref _selectedRectImageSource, cBmp.ToBitmapImage());
+                Set(ref _selectedRectImageSource, _selectedRectangleBitmap.ToBitmapImage());
             }
         }
 
@@ -185,11 +224,64 @@ namespace PrintScrn.ViewModels
 
         private void OnExecuted_OnInitCmd(object p)
         {
+            var windowViewModel = ViewModelsExtension.FindViewModel<PrintScrnWindowViewModel>();
+            if (windowViewModel != null) windowViewModel.WindowOpacity = 0.0;
+
             _fullscreenInitialBitmap = Screenshot.Fullscreen();
             if (_fullscreenInitialBitmap != null)
             {
                 ScreenshotCanvasImageSource = _fullscreenInitialBitmap.ToBitmapImage();
             }
+
+            if (windowViewModel != null)
+            {
+                windowViewModel.WindowOpacity = 1.0;
+                windowViewModel.ShowInTaskbar = true;
+            }
+        }
+
+        #endregion
+
+        #region ScreenshotFullscreenCmd
+
+        public ICommand ScreenshotFullscreenCmd { get; }
+
+        private static bool CanExecute_ScreenshotFullscreenCmd(object p)
+        {
+            return true;
+        }
+
+        private void OnExecuted_ScreenshotFullscreenCmd(object p)
+        {
+            var fullscreenInitialBitmapSource = _fullscreenInitialBitmap?.ToBitmapSource();
+            if (fullscreenInitialBitmapSource == null)
+            {
+                return;
+            }
+            Clipboard.SetImage(fullscreenInitialBitmapSource);
+            Application.Current.Shutdown(0);
+        }
+
+        #endregion
+
+        #region ScreenshotSelectedRectCmd
+
+        public ICommand ScreenshotSelectedRectCmd { get; }
+
+        private static bool CanExecute_ScreenshotSelectedRectCmd(object p)
+        {
+            return true;
+        }
+
+        private void OnExecuted_ScreenshotSelectedRectCmd(object p)
+        {
+            var selectedRectangleBitmapSource = _selectedRectangleBitmap?.ToBitmapSource();
+            if (selectedRectangleBitmapSource == null)
+            {
+                return;
+            }
+            Clipboard.SetImage(selectedRectangleBitmapSource);
+            Application.Current.Shutdown(0);
         }
 
         #endregion
