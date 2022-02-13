@@ -1,12 +1,11 @@
 ﻿using System.Windows.Controls;
 
-namespace PrintScrn.Views
+namespace PrintScrn.Views;
+
+public partial class ScreenshotCanvas : UserControl
 {
-    public partial class ScreenshotCanvas : UserControl
+    public ScreenshotCanvas()
     {
-        public ScreenshotCanvas()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

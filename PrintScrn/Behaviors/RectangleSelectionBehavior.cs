@@ -1,10 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Input;
-using Microsoft.Xaml.Behaviors;
+﻿using Microsoft.Xaml.Behaviors;
 using PrintScrn.Extensions;
 using PrintScrn.ViewModels;
+using System;
+using System.Windows;
+using System.Windows.Input;
 
 namespace PrintScrn.Behaviors;
 
@@ -20,7 +19,7 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         nameof(InitialMouseXPos),
         typeof(double),
         typeof(RectangleSelectionBehavior),
-        new PropertyMetadata(default(double))
+        new(default(double))
     );
 
     public double InitialMouseXPos
@@ -37,7 +36,7 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         nameof(InitialMouseYPos),
         typeof(double),
         typeof(RectangleSelectionBehavior),
-        new PropertyMetadata(default(double))
+        new(default(double))
     );
 
     public double InitialMouseYPos
@@ -54,7 +53,7 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         nameof(SelectedRectWidth),
         typeof(double),
         typeof(RectangleSelectionBehavior),
-        new PropertyMetadata(default(double))
+        new(default(double))
     );
 
     public double SelectedRectWidth
@@ -71,7 +70,7 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         nameof(SelectedRectHeight),
         typeof(double),
         typeof(RectangleSelectionBehavior),
-        new PropertyMetadata(default(double))
+        new(default(double))
     );
 
     public double SelectedRectHeight
@@ -88,7 +87,7 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         nameof(InitialMouseXPosScreenCoords),
         typeof(double),
         typeof(RectangleSelectionBehavior),
-        new PropertyMetadata(default(double))
+        new(default(double))
     );
 
     public double InitialMouseXPosScreenCoords
@@ -105,7 +104,7 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         nameof(InitialMouseYPosScreenCoords),
         typeof(double),
         typeof(RectangleSelectionBehavior),
-        new PropertyMetadata(default(double))
+        new(default(double))
     );
 
     public double InitialMouseYPosScreenCoords
@@ -122,7 +121,7 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         nameof(SelectedRectWidthScreenCoords),
         typeof(double),
         typeof(RectangleSelectionBehavior),
-        new PropertyMetadata(default(double))
+        new(default(double))
     );
 
     public double SelectedRectWidthScreenCoords
@@ -139,7 +138,7 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         nameof(SelectedRectHeightScreenCoords),
         typeof(double),
         typeof(RectangleSelectionBehavior),
-        new PropertyMetadata(default(double))
+        new(default(double))
     );
 
     public double SelectedRectHeightScreenCoords

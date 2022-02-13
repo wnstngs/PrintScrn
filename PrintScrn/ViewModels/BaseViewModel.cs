@@ -1,31 +1,30 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace PrintScrn.ViewModels
+namespace PrintScrn.ViewModels;
+
+public abstract class BaseViewModel : INotifyPropertyChanged
 {
-    public abstract class BaseViewModel : INotifyPropertyChanged
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
+        PropertyChanged?.Invoke(this, new(propertyName));
+    }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    protected virtual bool Set<T>(
+        ref T field,
+        T value,
+        [CallerMemberName] string? propertyName = null
+    )
+    {
+        if (Equals(field, value))
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return false;
         }
 
-        protected virtual bool Set<T>(
-            ref T field,
-            T value,
-            [CallerMemberName] string? propertyName = null
-        )
-        {
-            if (Equals(field, value))
-            {
-                return false;
-            }
-
-            field = value;
-            OnPropertyChanged(propertyName);
-            return true;
-        }
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
     }
 }

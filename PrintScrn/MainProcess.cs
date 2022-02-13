@@ -1,15 +1,14 @@
 ﻿using System;
 
-namespace PrintScrn
+namespace PrintScrn;
+
+internal static class MainProcess
 {
-    internal static class MainProcess
+    [STAThread]
+    public static void Main()
     {
-        [STAThread]
-        public static void Main()
-        {
-            App app = new();
-            app.InitializeComponent();
-            app.Run();
-        }
+        App app = new();
+        app.InitializeComponent();
+        app.Run();
     }
 }

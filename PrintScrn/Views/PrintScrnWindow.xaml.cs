@@ -1,12 +1,11 @@
 ﻿using System.Windows;
 
-namespace PrintScrn.Views
+namespace PrintScrn.Views;
+
+public partial class PrintScrnWindow : Window
 {
-    public partial class PrintScrnWindow : Window
+    public PrintScrnWindow()
     {
-        public PrintScrnWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

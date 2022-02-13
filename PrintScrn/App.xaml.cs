@@ -1,8 +1,7 @@
 ﻿using System.Windows;
 
-namespace PrintScrn
+namespace PrintScrn;
+
+public partial class App : Application
 {
-    public partial class App : Application
-    {
-    }
 }
