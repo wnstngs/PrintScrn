@@ -15,62 +15,78 @@
     <Border
         VerticalAlignment="Top"
         HorizontalAlignment="Center"
-        Height="64"
-        BorderThickness="0.4"
-        BorderBrush="Gray">
-        <Border.Background>
-            <ImageBrush
-                ImageSource="/PrintScrn;component/Assets/Texture_Steel_1.jpg" />
-        </Border.Background>
+        Height="50"
+        CornerRadius="8"
+        BorderThickness="0"
+        Margin="0, 16, 0, 0"
+        Background="#F5F5F5">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="6"
+                              ShadowDepth="1"
+                              Opacity="0.5"
+                              Color="Black" />
+        </Border.Effect>
 
         <StackPanel
             Orientation="Horizontal"
             VerticalAlignment="Center"
-            HorizontalAlignment="Stretch"
-            Height="60">
+            HorizontalAlignment="Stretch">
             <Button
                 Command="{Binding FullscreenCaptureCmd}"
-                Width="80"
+                Width="40"
+                Height="40"
+                Margin="4, 0, 0, 0"
                 Content="&#xE7F4;"
-                FontSize="20"
+                FontSize="14"
                 FontFamily="Segoe MDL2 Assets"
-                Margin="2, 1, 2, 1"
                 ToolTip="Screen"
-                Style="{StaticResource SteelUiPushButton}" />
+                Style="{StaticResource ModernUiButton}" />
+            <Rectangle Height="40"
+                       Width="1"
+                       Margin="2"
+                       Stroke="#C0BFC0" />
             <RadioButton
                 IsChecked="{Binding CustomRectangleCaptureMode, Mode=TwoWay}"
-                Width="80"
+                Width="40"
+                Height="40"
+                Margin="4, 0"
                 Content="&#xF407;"
-                FontSize="20"
+                FontSize="14"
                 FontFamily="Segoe MDL2 Assets"
-                Margin="0, 1, 2, 1"
                 ToolTip="Rectangle"
-                Style="{StaticResource SteelUiToggleButton}" />
+                Style="{StaticResource ModernUiToggleButton}" />
             <RadioButton
                 IsChecked="{Binding WindowRectangleCaptureMode, Mode=TwoWay}"
-                Width="80"
+                Width="40"
+                Height="40"
+                Margin="4, 0"
                 Content="&#xF7ED;"
-                FontSize="20"
+                FontSize="14"
                 FontFamily="Segoe MDL2 Assets"
-                Margin="0, 1, 2, 1"
                 ToolTip="Window"
-                Style="{StaticResource SteelUiToggleButton}" />
+                Style="{StaticResource ModernUiToggleButton}" />
+            <Rectangle Height="40"
+                       Width="1"
+                       Margin="2"
+                       Stroke="#C0BFC0" />
             <Button
-                Width="80"
+                Width="40"
+                Height="40"
+                Margin="4, 0"
                 Content="&#xF8B0;"
-                FontSize="20"
+                FontSize="14"
                 FontFamily="Segoe MDL2 Assets"
-                Margin="0, 1, 2, 1"
                 ToolTip="Settings"
-                Style="{StaticResource SteelUiPushButton}" />
+                Style="{StaticResource ModernUiButton}" />
             <Button
-                Width="80"
+                Width="40"
+                Height="40"
+                Margin="0, 0, 4, 0"
                 Content="&#xE8BB;"
-                FontSize="20"
+                FontSize="14"
                 FontFamily="Segoe MDL2 Assets"
-                Margin="0, 1, 2, 1"
                 ToolTip="Close"
-                Style="{StaticResource SteelUiPushButton}"
+                Style="{StaticResource ModernUiButton}"
                 Click="OnClickShutdownApp" />
         </StackPanel>
     </Border>
