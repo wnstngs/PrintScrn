@@ -22,7 +22,7 @@
     </Window.DataContext>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding OnInitCmd}"
+            <i:InvokeCommandAction Command="{Binding InitializeWindow}"
                                    CommandParameter="{Binding ElementName=StartupWindow}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>

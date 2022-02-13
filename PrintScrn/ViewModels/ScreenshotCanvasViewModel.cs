@@ -26,9 +26,9 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
         _graphicsCaptureService = new GraphicsCaptureService();
 
-        OnInitCmd = new RelayCommand(
-            OnExecuted_OnInitCmd,
-            CanExecute_OnInitCmd
+        CanvasInitialize = new RelayCommand(
+            OnCanvasInitialize,
+            CanCanvasInitialize
         );
         SnapshotCustomRectangle = new RelayCommand(
             OnSnapshotCustomRectangle,
@@ -223,16 +223,16 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
     #region Commands
 
-    #region OnInitCmd
+    #region CanvasInitialize
 
-    public ICommand OnInitCmd { get; }
+    public ICommand CanvasInitialize { get; }
 
-    private static bool CanExecute_OnInitCmd(object p)
+    private static bool CanCanvasInitialize(object p)
     {
         return true;
     }
 
-    private void OnExecuted_OnInitCmd(object p)
+    private void OnCanvasInitialize(object p)
     {
         var windowViewModel = ViewModelsExtension.FindViewModel<PrintScrnWindowViewModel>();
         if (windowViewModel != null) windowViewModel.WindowOpacity = 0.0;

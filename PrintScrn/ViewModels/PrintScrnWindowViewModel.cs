@@ -13,9 +13,9 @@ internal class PrintScrnWindowViewModel : BaseViewModel
         MonitorWidth = 0;
         MonitorHeight = 0;
 
-        OnInitCmd = new RelayCommand(
-            OnExecuted_OnInitCmd,
-            CanExecute_OnInitCmd
+        InitializeWindow = new RelayCommand(
+            OnInitializeWindow,
+            CanInitializeWindow
         );
     }
 
@@ -78,16 +78,16 @@ internal class PrintScrnWindowViewModel : BaseViewModel
 
     #region Commands
 
-    #region OnInitCmd
+    #region InitializeWindow
 
-    public ICommand OnInitCmd { get; }
+    public ICommand InitializeWindow { get; }
 
-    private static bool CanExecute_OnInitCmd(object p)
+    private static bool CanInitializeWindow(object p)
     {
         return true;
     }
 
-    private void OnExecuted_OnInitCmd(object p)
+    private void OnInitializeWindow(object p)
     {
         var initializedWindow = (Window?)p;
 

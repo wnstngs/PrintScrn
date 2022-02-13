@@ -11,9 +11,9 @@ public class ToolbarViewModel : BaseViewModel
     {
         ViewModels.Instance.ViewModelsStore.Add(this);
 
-        FullscreenCaptureCmd = new RelayCommand(
-            OnExecuted_FullscreenCaptureCmd,
-            CanExecute_FullscreenCaptureCmd
+        DelegateSnapshotFullscreen = new RelayCommand(
+            OnDelegateSnapshotFullscreen,
+            CanDelegateSnapshotFullscreen
         );
     }
 
@@ -64,16 +64,16 @@ public class ToolbarViewModel : BaseViewModel
 
     #region Commands
 
-    #region FullscreenCaptureCmd
+    #region DelegateSnapshotFullscreen
 
-    public ICommand FullscreenCaptureCmd { get; }
+    public ICommand DelegateSnapshotFullscreen { get; }
 
-    private static bool CanExecute_FullscreenCaptureCmd(object p)
+    private static bool CanDelegateSnapshotFullscreen(object p)
     {
         return true;
     }
 
-    private void OnExecuted_FullscreenCaptureCmd(object p)
+    private void OnDelegateSnapshotFullscreen(object p)
     {
         var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
         screenshotCanvasViewModel?.SnapshotFullscreen.Execute(null);

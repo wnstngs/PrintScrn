@@ -32,7 +32,7 @@
             VerticalAlignment="Center"
             HorizontalAlignment="Stretch">
             <Button
-                Command="{Binding FullscreenCaptureCmd}"
+                Command="{Binding DelegateSnapshotFullscreen}"
                 Width="40"
                 Height="40"
                 Margin="4, 0, 0, 0"

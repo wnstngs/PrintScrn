@@ -16,7 +16,7 @@
         <i:EventTrigger
             EventName="Loaded">
             <i:InvokeCommandAction
-                Command="{Binding OnInitCmd}" />
+                Command="{Binding CanvasInitialize}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
