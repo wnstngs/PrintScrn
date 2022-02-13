@@ -14,7 +14,7 @@
                         Width="{TemplateBinding Width}"
                         Height="{TemplateBinding Height}">
                         <Border.Background>
-                            <ImageBrush ImageSource="/PrintScrn;component/Assets/Texture_Steel_1.jpg" />
+                            <ImageBrush ImageSource="/Resources/Assets/Texture_Steel_1.jpg" />
                         </Border.Background>
                         <Grid
                             x:Name="Button_Mask"
@@ -86,7 +86,7 @@
                         Width="{TemplateBinding Width}"
                         Height="{TemplateBinding Height}">
                         <Border.Background>
-                            <ImageBrush ImageSource="/PrintScrn;component/Assets/Texture_Steel_1.jpg" />
+                            <ImageBrush ImageSource="/Resources/Assets/Texture_Steel_1.jpg" />
                         </Border.Background>
                         <Grid
                             x:Name="Button_Mask"
@@ -144,9 +144,8 @@
         </Setter>
     </Style>
 
-    <Style
-        x:Key="ModernUiButton"
-        TargetType="{x:Type Button}">
+    <Style x:Key="ModernUiButton"
+           TargetType="{x:Type Button}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -156,7 +155,7 @@
                         BorderThickness="0"
                         Width="{TemplateBinding Width}"
                         Height="{TemplateBinding Height}"
-                        Background="#F5F5F5">
+                        Background="{StaticResource ModernUi_LightTheme_MainColor}">
                         <Label
                             x:Name="Button_Content"
                             Content="{TemplateBinding Content}"
@@ -165,7 +164,7 @@
                             FontWeight="{TemplateBinding FontWeight}"
                             FontFamily="{TemplateBinding FontFamily}"
                             FontSize="{TemplateBinding FontSize}"
-                            Foreground="#5E5E63"
+                            Foreground="{StaticResource ModernUi_LightTheme_LabelColor}"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch" />
                     </Border>
@@ -175,14 +174,14 @@
                                  Value="True">
                             <Setter TargetName="Button_RootLayout" 
                                     Property="Background"
-                                    Value="#E1DFE1" />
+                                    Value="{StaticResource ModernUi_LightTheme_LightGrayColor}" />
                         </Trigger>
 
                         <Trigger Property="IsPressed"
                                  Value="True">
                             <Setter TargetName="Button_RootLayout"
                                     Property="Background"
-                                    Value="#C0BFC0" />
+                                    Value="{StaticResource ModernUi_LightTheme_DarkGrayAccentColor}" />
                         </Trigger>
 
                         <Trigger
@@ -210,7 +209,7 @@
                         BorderThickness="0"
                         Width="{TemplateBinding Width}"
                         Height="{TemplateBinding Height}"
-                        Background="#F5F5F5">
+                        Background="{StaticResource ModernUi_LightTheme_MainColor}">
                         <Label
                             Content="{TemplateBinding Content}"
                             VerticalContentAlignment="Center"
@@ -218,7 +217,7 @@
                             FontWeight="{TemplateBinding FontWeight}"
                             FontFamily="{TemplateBinding FontFamily}"
                             FontSize="{TemplateBinding FontSize}"
-                            Foreground="#5E5E63"
+                            Foreground="{StaticResource ModernUi_LightTheme_LabelColor}"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch" />
                     </Border>
@@ -228,14 +227,14 @@
                                  Value="True">
                             <Setter Property="Background"
                                     TargetName="Button_RootLayout"
-                                    Value="#E1DFE1" />
+                                    Value="{StaticResource ModernUi_LightTheme_LightGrayColor}" />
                         </Trigger>
 
                         <Trigger Property="IsChecked"
                                  Value="True">
                             <Setter Property="Background"
                                     TargetName="Button_RootLayout"
-                                    Value="#C0BFC0" />
+                                    Value="{StaticResource ModernUi_LightTheme_DarkGrayAccentColor}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

@@ -19,7 +19,7 @@
         CornerRadius="8"
         BorderThickness="0"
         Margin="0, 16, 0, 0"
-        Background="#F5F5F5">
+        Background="{StaticResource ModernUi_LightTheme_MainColor}">
         <Border.Effect>
             <DropShadowEffect BlurRadius="6"
                               ShadowDepth="1"
@@ -44,7 +44,7 @@
             <Rectangle Height="40"
                        Width="1"
                        Margin="2"
-                       Stroke="#C0BFC0" />
+                       Stroke="{StaticResource ModernUi_LightTheme_DarkGrayAccentColor}" />
             <RadioButton
                 IsChecked="{Binding CustomRectangleCaptureMode, Mode=TwoWay}"
                 Width="40"
@@ -68,7 +68,7 @@
             <Rectangle Height="40"
                        Width="1"
                        Margin="2"
-                       Stroke="#C0BFC0" />
+                       Stroke="{StaticResource ModernUi_LightTheme_DarkGrayAccentColor}" />
             <Button
                 Width="40"
                 Height="40"

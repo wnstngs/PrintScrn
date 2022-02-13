@@ -1,10 +1,10 @@
 ﻿using PrintScrn.Commands;
 using PrintScrn.Extensions;
 using System;
-using System.Drawing;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using PrintScrn.Models;
 using PrintScrn.Services;
 using PrintScrn.Services.Interfaces;
 
@@ -16,6 +16,10 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
     private readonly IGraphicsCapture _graphicsCaptureService;
 
+    private Screenshot? _fullscreenScreenshot;
+
+    private Screenshot? _customRectangleScreenshot;
+
     public ScreenshotCanvasViewModel()
     {
         ViewModels.Instance.ViewModelsStore.Add(this);
@@ -26,13 +30,13 @@ public class ScreenshotCanvasViewModel : BaseViewModel
             OnExecuted_OnInitCmd,
             CanExecute_OnInitCmd
         );
-        ScreenshotSelectedRectCmd = new RelayCommand(
-            OnExecuted_ScreenshotSelectedRectCmd,
-            CanExecute_ScreenshotSelectedRectCmd
+        SnapshotCustomRectangle = new RelayCommand(
+            OnSnapshotCustomRectangle,
+            CanSnapshotCustomRectangle
         );
-        ScreenshotFullscreenCmd = new RelayCommand(
-            OnExecuted_ScreenshotFullscreenCmd,
-            CanExecute_ScreenshotFullscreenCmd
+        SnapshotFullscreen = new RelayCommand(
+            OnSnapshotFullscreen,
+            CanSnapshotFullscreen
         );
     }
 
@@ -40,10 +44,6 @@ public class ScreenshotCanvasViewModel : BaseViewModel
     {
         ViewModels.Instance.ViewModelsStore.Remove(this);
     }
-
-    private Bitmap? _fullscreenInitialBitmap;
-
-    private Bitmap? _selectedRectangleBitmap;
 
     #region Properties
 
@@ -103,7 +103,12 @@ public class ScreenshotCanvasViewModel : BaseViewModel
                 return;
             }
 
-            _selectedRectangleBitmap = _fullscreenInitialBitmap.Crop(
+            if (_customRectangleScreenshot == null || _fullscreenScreenshot == null)
+            {
+                return;
+            }
+
+            _customRectangleScreenshot.Bitmap = _fullscreenScreenshot.Bitmap.Crop(
                 new(
                     (int)Math.Floor(_selectedRectXPositionScreenCoords),
                     (int)Math.Floor(_selectedRectYPositionScreenCoords),
@@ -112,7 +117,7 @@ public class ScreenshotCanvasViewModel : BaseViewModel
                 )
             );
 
-            Set(ref _selectedRectImageSource, _selectedRectangleBitmap.ToBitmapImage());
+            Set(ref _selectedRectImageSource, _customRectangleScreenshot.Bitmap.ToBitmapImage());
         }
     }
 
@@ -232,10 +237,11 @@ public class ScreenshotCanvasViewModel : BaseViewModel
         var windowViewModel = ViewModelsExtension.FindViewModel<PrintScrnWindowViewModel>();
         if (windowViewModel != null) windowViewModel.WindowOpacity = 0.0;
 
-        _fullscreenInitialBitmap = _graphicsCaptureService.SnapshotFullscreen().Bitmap;
-        if (_fullscreenInitialBitmap != null)
+        _fullscreenScreenshot = _graphicsCaptureService.SnapshotFullscreen();
+
+        if (_fullscreenScreenshot?.BitmapImage != null)
         {
-            ScreenshotCanvasImageSource = _fullscreenInitialBitmap.ToBitmapImage();
+            ScreenshotCanvasImageSource = _fullscreenScreenshot.BitmapImage;
         }
 
         if (windowViewModel != null)
@@ -247,45 +253,43 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
     #endregion
 
-    #region ScreenshotFullscreenCmd
+    #region SnapshotFullscreen
 
-    public ICommand ScreenshotFullscreenCmd { get; }
+    public ICommand SnapshotFullscreen { get; }
 
-    private static bool CanExecute_ScreenshotFullscreenCmd(object p)
+    private static bool CanSnapshotFullscreen(object p)
     {
         return true;
     }
 
-    private void OnExecuted_ScreenshotFullscreenCmd(object p)
+    private void OnSnapshotFullscreen(object p)
     {
-        var fullscreenInitialBitmapSource = _fullscreenInitialBitmap?.ToBitmapSource();
-        if (fullscreenInitialBitmapSource == null)
+        if (_fullscreenScreenshot?.BitmapSource == null)
         {
             return;
         }
-        Clipboard.SetImage(fullscreenInitialBitmapSource);
+        Clipboard.SetImage(_fullscreenScreenshot.BitmapSource);
         Application.Current.Shutdown(0);
     }
 
     #endregion
 
-    #region ScreenshotSelectedRectCmd
+    #region SnapshotCustomRectangle
 
-    public ICommand ScreenshotSelectedRectCmd { get; }
+    public ICommand SnapshotCustomRectangle { get; }
 
-    private static bool CanExecute_ScreenshotSelectedRectCmd(object p)
+    private static bool CanSnapshotCustomRectangle(object p)
     {
         return true;
     }
 
-    private void OnExecuted_ScreenshotSelectedRectCmd(object p)
+    private void OnSnapshotCustomRectangle(object p)
     {
-        var selectedRectangleBitmapSource = _selectedRectangleBitmap?.ToBitmapSource();
-        if (selectedRectangleBitmapSource == null)
+        if (_customRectangleScreenshot?.BitmapSource == null)
         {
             return;
         }
-        Clipboard.SetImage(selectedRectangleBitmapSource);
+        Clipboard.SetImage(_customRectangleScreenshot.BitmapSource);
         Application.Current.Shutdown(0);
     }
 

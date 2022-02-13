@@ -76,7 +76,7 @@ public class ToolbarViewModel : BaseViewModel
     private void OnExecuted_FullscreenCaptureCmd(object p)
     {
         var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
-        screenshotCanvasViewModel?.ScreenshotFullscreenCmd.Execute(null);
+        screenshotCanvasViewModel?.SnapshotFullscreen.Execute(null);
     }
 
     #endregion

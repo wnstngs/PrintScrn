@@ -201,7 +201,7 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         }
 
         var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
-        screenshotCanvasViewModel?.ScreenshotSelectedRectCmd.Execute(null);
+        screenshotCanvasViewModel?.SnapshotCustomRectangle.Execute(null);
 
         ResetProperties();
     }

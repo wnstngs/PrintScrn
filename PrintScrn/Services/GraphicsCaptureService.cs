@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using PrintScrn.Extensions;
 using PrintScrn.Helpers;
 using PrintScrn.Models;
 using PrintScrn.Services.Interfaces;
@@ -7,29 +8,35 @@ namespace PrintScrn.Services;
 
 public class GraphicsCaptureService : IGraphicsCapture
 {
-    public Screenshot SnapshotFullscreen()
+    public Screenshot? SnapshotFullscreen()
     {
         var monitorRect = GraphicsCaptureHelper.GetMonitorRectFromWindow();
+        var bitmap = CaptureBitmapFromScreen(
+            new RectangleCaptureArea
+            {
+                X = monitorRect.X,
+                Y = monitorRect.Y,
+                Width = monitorRect.Width,
+                Height = monitorRect.Height
+            }
+        );
         return new Screenshot
         {
-            Bitmap = CaptureBitmapFromScreen(
-                new RectangleCaptureArea
-                {
-                    X = monitorRect.X,
-                    Y = monitorRect.Y,
-                    Width = monitorRect.Width,
-                    Height = monitorRect.Height
-                }
-            )
+            Bitmap = bitmap,
+            BitmapSource = bitmap.ToBitmapSource(),
+            BitmapImage = bitmap.ToBitmapImage()
         };
     }
 
     public Screenshot SnapshotCustomRectangle(RectangleCaptureArea rectangle)
     {
+        var bitmap = CaptureBitmapFromScreen(rectangle);
         return new Screenshot
         {
-            Bitmap = CaptureBitmapFromScreen(rectangle)
-        }; ;
+            Bitmap = bitmap,
+            BitmapSource = bitmap.ToBitmapSource(),
+            BitmapImage = bitmap.ToBitmapImage()
+        };
     }
 
     private Bitmap? CaptureBitmapFromScreen(RectangleCaptureArea rectangle)

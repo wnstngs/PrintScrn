@@ -14,7 +14,7 @@
         WindowStyle="None"
         WindowState="Maximized"
         ShowInTaskbar="{Binding ShowInTaskbar}"
-        Icon="../Assets/ScreenshotAppIcon.ico"
+        Icon="/Resources/Assets/ScreenshotAppIcon.ico"
         AllowsTransparency="True"
         Opacity="{Binding WindowOpacity}">
     <Window.DataContext>

@@ -6,7 +6,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
 
-                <ResourceDictionary Source="Styles/Button/ButtonStyles.xaml" />
+                <ResourceDictionary Source="Resources/Brushes.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Button/ButtonStyles.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

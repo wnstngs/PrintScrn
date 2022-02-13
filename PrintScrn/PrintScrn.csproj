@@ -12,9 +12,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\ScreenshotAppIcon.ico" />
-    <None Remove="Assets\Texture_Steel_1.jpg" />
-    <None Remove="Assets\Texture_Steel_2.jpg" />
+    <None Remove="Resources\Assets\ScreenshotAppIcon.ico" />
+    <None Remove="Resources\Assets\Texture_Steel_1.jpg" />
+    <None Remove="Resources\Assets\Texture_Steel_2.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,9 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\ScreenshotAppIcon.ico" />
-    <Resource Include="Assets\Texture_Steel_1.jpg" />
-    <Resource Include="Assets\Texture_Steel_2.jpg" />
+    <Resource Include="Resources\Assets\ScreenshotAppIcon.ico" />
+    <Resource Include="Resources\Assets\Texture_Steel_1.jpg" />
+    <Resource Include="Resources\Assets\Texture_Steel_2.jpg" />
   </ItemGroup>
 
 </Project>
