@@ -1,6 +1,6 @@
-﻿using PrintScrn.Commands;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
+using PrintScrn.Command;
 
 namespace PrintScrn.ViewModels;
 
@@ -13,10 +13,7 @@ internal class PrintScrnWindowViewModel : BaseViewModel
         MonitorWidth = 0;
         MonitorHeight = 0;
 
-        InitializeWindow = new RelayCommand(
-            OnInitializeWindow,
-            CanInitializeWindow
-        );
+        InitializeWindow = new RelayCommand<Window>(OnInitializeWindow);
     }
 
     ~PrintScrnWindowViewModel()
@@ -81,24 +78,10 @@ internal class PrintScrnWindowViewModel : BaseViewModel
     #region InitializeWindow
 
     public ICommand InitializeWindow { get; }
-
-    private static bool CanInitializeWindow(object p)
+    
+    private void OnInitializeWindow(Window parameter)
     {
-        return true;
-    }
-
-    private void OnInitializeWindow(object p)
-    {
-        var initializedWindow = (Window?)p;
-
-        if (initializedWindow == null)
-        {
-            MessageBox.Show("`OnExecuted_OnInitCmd(object p)`:\n  `(Window?) p` is null!", "Error");
-            Application.Current.Shutdown(1);
-            return;
-        }
-
-        var presentationSrc = PresentationSource.FromVisual(initializedWindow);
+        var presentationSrc = PresentationSource.FromVisual(parameter);
         if (presentationSrc?.CompositionTarget != null)
         {
             var m = presentationSrc.CompositionTarget.TransformToDevice;

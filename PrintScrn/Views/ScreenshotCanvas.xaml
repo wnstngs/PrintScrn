@@ -13,10 +13,8 @@
         <vm:ScreenshotCanvasViewModel />
     </UserControl.DataContext>
     <i:Interaction.Triggers>
-        <i:EventTrigger
-            EventName="Loaded">
-            <i:InvokeCommandAction
-                Command="{Binding CanvasInitialize}" />
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding CanvasInitialize}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
@@ -57,7 +55,7 @@
             Width="{Binding SelectedRectWidth}"
             Height="{Binding SelectedRectHeight}"
             Stroke="{StaticResource ModernUi_LightTheme_LightGrayColor}"
-            StrokeThickness="0"
+            StrokeThickness="0.5"
             StrokeDashArray="10"
             StrokeDashOffset="4"
             StrokeDashCap="Round"
@@ -69,8 +67,7 @@
             </Rectangle.Fill>
 
             <Rectangle.Triggers>
-                <EventTrigger
-                    RoutedEvent="FrameworkElement.Loaded">
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                     <BeginStoryboard>
                         <Storyboard>
                             <DoubleAnimation

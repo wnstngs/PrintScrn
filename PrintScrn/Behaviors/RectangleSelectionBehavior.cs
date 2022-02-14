@@ -2,6 +2,7 @@
 using PrintScrn.Extensions;
 using PrintScrn.ViewModels;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,7 +10,11 @@ namespace PrintScrn.Behaviors;
 
 public class RectangleSelectionBehavior : Behavior<UIElement>
 {
-    private Point _startPoint;
+    /// <summary>
+    /// Mouse position when <see cref="UIElement.PreviewMouseDown"/> event occured.
+    /// (i. e. coordinates where the user clicked first time).
+    /// </summary>
+    private Point _initialMousePos;
 
     #region Properties
 
@@ -175,18 +180,22 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
 
         ResetProperties();
 
-        _startPoint = e.GetPosition(AssociatedObject);
+        _initialMousePos = e.GetPosition(AssociatedObject);
 
         AssociatedObject.MouseMove += OnMouseMove;
         AssociatedObject.MouseUp += OnMouseUp;
 
-        InitialMouseXPos = _startPoint.X;
-        InitialMouseYPos = _startPoint.Y;
-        InitialMouseXPosScreenCoords = AssociatedObject.PointToScreen(_startPoint).X;
-        InitialMouseYPosScreenCoords = AssociatedObject.PointToScreen(_startPoint).Y;
+        InitialMouseXPos = _initialMousePos.X;
+        InitialMouseYPos = _initialMousePos.Y;
+        InitialMouseXPosScreenCoords = AssociatedObject.PointToScreen(_initialMousePos).X;
+        InitialMouseYPosScreenCoords = AssociatedObject.PointToScreen(_initialMousePos).Y;
+
+        Trace.WriteLine($"{AssociatedObject.PointToScreen(_initialMousePos).X} {AssociatedObject.PointToScreen(_initialMousePos).Y}");
 
         var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
-        if (screenshotCanvasViewModel != null) screenshotCanvasViewModel.SelectedRectImageSource = null;
+        if (screenshotCanvasViewModel != null) 
+            // null because we only need to trigger setter.
+            screenshotCanvasViewModel.SelectedRectImageSource = null;
     }
 
     private void OnMouseUp(object sender, MouseButtonEventArgs e)
@@ -216,16 +225,18 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         var currentPos = e.GetPosition(AssociatedObject);
         var currentPosScreenCoords = AssociatedObject.PointToScreen(e.GetPosition(AssociatedObject));
 
-        var delta = currentPos - _startPoint;
-        var deltaScreenCoords = currentPosScreenCoords - AssociatedObject.PointToScreen(_startPoint);
+        var delta = currentPos - _initialMousePos;
+        var deltaScreenCoords = currentPosScreenCoords - AssociatedObject.PointToScreen(_initialMousePos);
 
-        SelectedRectWidth = Math.Floor(delta.X);
-        SelectedRectHeight = Math.Floor(delta.Y);
-        SelectedRectWidthScreenCoords = Math.Floor(deltaScreenCoords.X);
-        SelectedRectHeightScreenCoords = Math.Floor(deltaScreenCoords.Y);
+        SelectedRectWidth = Math.Round(delta.X);
+        SelectedRectHeight = Math.Round(delta.Y);
+        SelectedRectWidthScreenCoords = Math.Round(deltaScreenCoords.X);
+        SelectedRectHeightScreenCoords = Math.Round(deltaScreenCoords.Y);
 
         var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
-        if (screenshotCanvasViewModel != null) screenshotCanvasViewModel.SelectedRectImageSource = null;
+        if (screenshotCanvasViewModel != null)
+            // null because we only need to trigger setter.
+            screenshotCanvasViewModel.SelectedRectImageSource = null;
 
         AssociatedObject.InvalidateVisual();
     }

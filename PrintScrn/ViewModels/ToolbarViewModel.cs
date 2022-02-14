@@ -1,7 +1,7 @@
-﻿using PrintScrn.Commands;
-using PrintScrn.Extensions;
+﻿using PrintScrn.Extensions;
 using System.Windows;
 using System.Windows.Input;
+using PrintScrn.Command;
 
 namespace PrintScrn.ViewModels;
 
@@ -11,10 +11,7 @@ public class ToolbarViewModel : BaseViewModel
     {
         ViewModels.Instance.ViewModelsStore.Add(this);
 
-        DelegateSnapshotFullscreen = new RelayCommand(
-            OnDelegateSnapshotFullscreen,
-            CanDelegateSnapshotFullscreen
-        );
+        DelegateSnapshotFullscreen = new RelayCommand(OnDelegateSnapshotFullscreen);
     }
 
     ~ToolbarViewModel()
@@ -68,12 +65,7 @@ public class ToolbarViewModel : BaseViewModel
 
     public ICommand DelegateSnapshotFullscreen { get; }
 
-    private static bool CanDelegateSnapshotFullscreen(object p)
-    {
-        return true;
-    }
-
-    private void OnDelegateSnapshotFullscreen(object p)
+    private void OnDelegateSnapshotFullscreen()
     {
         var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
         screenshotCanvasViewModel?.SnapshotFullscreen.Execute(null);

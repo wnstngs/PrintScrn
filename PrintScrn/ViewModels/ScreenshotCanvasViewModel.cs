@@ -28,18 +28,9 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
         _customRectangleScreenshot = new Screenshot();
 
-        CanvasInitialize = new RelayCommand(
-            OnCanvasInitialize,
-            CanCanvasInitialize
-        );
-        SnapshotCustomRectangle = new RelayCommand(
-            OnSnapshotCustomRectangle,
-            CanSnapshotCustomRectangle
-        );
-        SnapshotFullscreen = new RelayCommand(
-            OnSnapshotFullscreen,
-            CanSnapshotFullscreen
-        );
+        CanvasInitialize = new RelayCommand(OnCanvasInitialize);
+        SnapshotCustomRectangle = new RelayCommand(OnSnapshotCustomRectangle);
+        SnapshotFullscreen = new RelayCommand(OnSnapshotFullscreen);
     }
 
     ~ScreenshotCanvasViewModel()
@@ -234,12 +225,7 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
     public ICommand CanvasInitialize { get; }
 
-    private static bool CanCanvasInitialize(object p)
-    {
-        return true;
-    }
-
-    private void OnCanvasInitialize(object p)
+    private void OnCanvasInitialize()
     {
         var windowViewModel = ViewModelsExtension.FindViewModel<PrintScrnWindowViewModel>();
         if (windowViewModel != null) windowViewModel.WindowOpacity = 0.0;
@@ -264,12 +250,7 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
     public ICommand SnapshotFullscreen { get; }
 
-    private static bool CanSnapshotFullscreen(object p)
-    {
-        return true;
-    }
-
-    private void OnSnapshotFullscreen(object p)
+    private void OnSnapshotFullscreen()
     {
         if (_fullscreenScreenshot?.BitmapSource == null)
         {
@@ -285,12 +266,7 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
     public ICommand SnapshotCustomRectangle { get; }
 
-    private static bool CanSnapshotCustomRectangle(object p)
-    {
-        return true;
-    }
-
-    private void OnSnapshotCustomRectangle(object p)
+    private void OnSnapshotCustomRectangle()
     {
         if (_customRectangleScreenshot != null)
         {
