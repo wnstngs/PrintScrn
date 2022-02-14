@@ -168,6 +168,11 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         AssociatedObject.PreviewMouseUp -= OnMouseUp;
     }
 
+    /// <summary>
+    /// <see cref="UIElement.PreviewMouseDown"/> event handler.
+    /// </summary>
+    /// <param name="sender">The object where the event handler is attached.</param>
+    /// <param name="e">The event data.</param>
     private void OnMouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.LeftButton != MouseButtonState.Pressed)
@@ -190,14 +195,19 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         InitialMouseXPosScreenCoords = AssociatedObject.PointToScreen(_initialMousePos).X;
         InitialMouseYPosScreenCoords = AssociatedObject.PointToScreen(_initialMousePos).Y;
 
-        Trace.WriteLine($"{AssociatedObject.PointToScreen(_initialMousePos).X} {AssociatedObject.PointToScreen(_initialMousePos).Y}");
-
         var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
-        if (screenshotCanvasViewModel != null) 
+        if (screenshotCanvasViewModel != null)
+        {
             // null because we only need to trigger setter.
             screenshotCanvasViewModel.SelectedRectImageSource = null;
+        }
     }
 
+    /// <summary>
+    /// <see cref="UIElement.PreviewMouseUp"/> event handler.
+    /// </summary>
+    /// <param name="sender">The object where the event handler is attached.</param>
+    /// <param name="e">The event data.</param>
     private void OnMouseUp(object sender, MouseButtonEventArgs e)
     {
         AssociatedObject.MouseMove -= OnMouseMove;
@@ -215,6 +225,11 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         ResetProperties();
     }
 
+    /// <summary>
+    /// <see cref="UIElement.PreviewMouseMove"/> event handler.
+    /// </summary>
+    /// <param name="sender">The object where the event handler is attached.</param>
+    /// <param name="e">The event data.</param>
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
         if (e.LeftButton != MouseButtonState.Pressed)
@@ -228,19 +243,28 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         var delta = currentPos - _initialMousePos;
         var deltaScreenCoords = currentPosScreenCoords - AssociatedObject.PointToScreen(_initialMousePos);
 
-        SelectedRectWidth = Math.Round(delta.X);
-        SelectedRectHeight = Math.Round(delta.Y);
-        SelectedRectWidthScreenCoords = Math.Round(deltaScreenCoords.X);
-        SelectedRectHeightScreenCoords = Math.Round(deltaScreenCoords.Y);
+        // TODO: Looks like with '+ 1' we get correct values, but need to double-check.
+        // Without it, selecting whole screen I have X = 0, Y = 0, W = 2559, H = 1439 for 2560x1440 monitor.
+        // Width and height values are incorrect (they are equal to end mouse position which actually is correct),
+        // but we need to think how to correctly find width and height of the selected rectangle.
+        SelectedRectWidth = Math.Round(delta.X + 1);
+        SelectedRectHeight = Math.Round(delta.Y + 1);
+        SelectedRectWidthScreenCoords = Math.Round(deltaScreenCoords.X + 1);
+        SelectedRectHeightScreenCoords = Math.Round(deltaScreenCoords.Y + 1);
 
         var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
         if (screenshotCanvasViewModel != null)
+        {
             // null because we only need to trigger setter.
             screenshotCanvasViewModel.SelectedRectImageSource = null;
+        }
 
         AssociatedObject.InvalidateVisual();
     }
 
+    /// <summary>
+    /// Zeroes all properties related to the behavior.
+    /// </summary>
     private void ResetProperties()
     {
         InitialMouseXPos = 0.0;

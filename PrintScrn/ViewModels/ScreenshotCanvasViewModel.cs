@@ -13,7 +13,7 @@ namespace PrintScrn.ViewModels;
 
 public class ScreenshotCanvasViewModel : BaseViewModel
 {
-    private const int MinSelectedRectSize = 4;
+    private const int MinSelectedRectSize = 10;
 
     private readonly IGraphicsCapture _graphicsCaptureService;
 
@@ -86,15 +86,27 @@ public class ScreenshotCanvasViewModel : BaseViewModel
         get => _selectedRectImageSource;
         set
         {
+            if (_customRectangleScreenshot == null || _fullscreenScreenshot == null)
+            {
+                return;
+            }
+
             if (_selectedRectXPositionScreenCoords < 0 || _selectedRectYPositionScreenCoords < 0)
             {
                 return;
             }
 
-            if (_customRectangleScreenshot == null || _fullscreenScreenshot == null)
-            {
-                return;
-            }
+            FileLogger.Log(message:
+                "\n" +
+                $"_selectedRectXPositionScreenCoords: {_selectedRectXPositionScreenCoords}" +
+                "\n" +
+                $"_selectedRectYPositionScreenCoords: {_selectedRectYPositionScreenCoords}" +
+                "\n" +
+                $"_selectedRectWidthScreenCoords: {_selectedRectWidthScreenCoords}" +
+                "\n" +
+                $"_selectedRectHeightScreenCoords: {_selectedRectHeightScreenCoords}" +
+                "\n"
+            );
 
             _customRectangleScreenshot.Bitmap = _fullscreenScreenshot.Bitmap.Crop(
                 new(
