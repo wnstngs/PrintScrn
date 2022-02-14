@@ -1,9 +1,9 @@
-﻿using PrintScrn.Commands;
-using PrintScrn.Extensions;
+﻿using PrintScrn.Extensions;
 using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using PrintScrn.Command;
 using PrintScrn.Models;
 using PrintScrn.Services;
 using PrintScrn.Services.Interfaces;
@@ -25,6 +25,8 @@ public class ScreenshotCanvasViewModel : BaseViewModel
         ViewModels.Instance.ViewModelsStore.Add(this);
 
         _graphicsCaptureService = new GraphicsCaptureService();
+
+        _customRectangleScreenshot = new Screenshot();
 
         CanvasInitialize = new RelayCommand(
             OnCanvasInitialize,
@@ -110,12 +112,17 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
             _customRectangleScreenshot.Bitmap = _fullscreenScreenshot.Bitmap.Crop(
                 new(
-                    (int)Math.Floor(_selectedRectXPositionScreenCoords),
-                    (int)Math.Floor(_selectedRectYPositionScreenCoords),
-                    (int)Math.Floor(_selectedRectWidthScreenCoords),
-                    (int)Math.Floor(_selectedRectHeightScreenCoords)
+                    (int)Math.Round(_selectedRectXPositionScreenCoords),
+                    (int)Math.Round(_selectedRectYPositionScreenCoords),
+                    (int)Math.Round(_selectedRectWidthScreenCoords),
+                    (int)Math.Round(_selectedRectHeightScreenCoords)
                 )
             );
+
+            if (_customRectangleScreenshot.Bitmap == null)
+            {
+                return;
+            }
 
             Set(ref _selectedRectImageSource, _customRectangleScreenshot.Bitmap.ToBitmapImage());
         }
@@ -285,11 +292,16 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
     private void OnSnapshotCustomRectangle(object p)
     {
-        if (_customRectangleScreenshot?.BitmapSource == null)
+        if (_customRectangleScreenshot != null)
         {
-            return;
+            _customRectangleScreenshot.BitmapSource = _customRectangleScreenshot.Bitmap.ToBitmapSource();
+            if (_customRectangleScreenshot?.BitmapSource == null)
+            {
+                return;
+            }
+            Clipboard.SetImage(_customRectangleScreenshot.BitmapSource);
         }
-        Clipboard.SetImage(_customRectangleScreenshot.BitmapSource);
+
         Application.Current.Shutdown(0);
     }
 
