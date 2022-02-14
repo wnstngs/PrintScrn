@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using PrintScrn.Command;
+using PrintScrn.Infrastructure;
 using PrintScrn.Models;
 using PrintScrn.Services;
 using PrintScrn.Services.Interfaces;
@@ -12,7 +13,7 @@ namespace PrintScrn.ViewModels;
 
 public class ScreenshotCanvasViewModel : BaseViewModel
 {
-    private const int MinSelectedRectSize = 15;
+    private const int MinSelectedRectSize = 4;
 
     private readonly IGraphicsCapture _graphicsCaptureService;
 
@@ -85,12 +86,6 @@ public class ScreenshotCanvasViewModel : BaseViewModel
         get => _selectedRectImageSource;
         set
         {
-            if (_selectedRectWidthScreenCoords <= MinSelectedRectSize ||
-                _selectedRectHeightScreenCoords <= MinSelectedRectSize)
-            {
-                return;
-            }
-
             if (_selectedRectXPositionScreenCoords < 0 || _selectedRectYPositionScreenCoords < 0)
             {
                 return;
@@ -268,6 +263,11 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
     private void OnSnapshotCustomRectangle()
     {
+        if (SelectedRectHeight < MinSelectedRectSize || SelectedRectWidth < MinSelectedRectSize)
+        {
+            return;
+        }
+
         if (_customRectangleScreenshot != null)
         {
             _customRectangleScreenshot.BitmapSource = _customRectangleScreenshot.Bitmap.ToBitmapSource();
