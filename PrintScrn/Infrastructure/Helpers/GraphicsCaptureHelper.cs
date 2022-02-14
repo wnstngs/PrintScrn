@@ -3,9 +3,9 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
-using PrintScrn.Native;
+using PrintScrn.Infrastructure.Native;
 
-namespace PrintScrn.Helpers;
+namespace PrintScrn.Infrastructure.Helpers;
 
 internal static class GraphicsCaptureHelper
 {

@@ -1,10 +1,10 @@
-﻿using PrintScrn.Extensions;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using PrintScrn.Command;
 using PrintScrn.Infrastructure;
+using PrintScrn.Infrastructure.Command;
+using PrintScrn.Infrastructure.Extensions;
 using PrintScrn.Models;
 using PrintScrn.Services;
 using PrintScrn.Services.Interfaces;
@@ -96,7 +96,7 @@ public class ScreenshotCanvasViewModel : BaseViewModel
                 return;
             }
 
-            FileLogger.Log(message:
+            /*FileLogger.Log(message:
                 "\n" +
                 $"_selectedRectXPositionScreenCoords: {_selectedRectXPositionScreenCoords}" +
                 "\n" +
@@ -106,7 +106,7 @@ public class ScreenshotCanvasViewModel : BaseViewModel
                 "\n" +
                 $"_selectedRectHeightScreenCoords: {_selectedRectHeightScreenCoords}" +
                 "\n"
-            );
+            );*/
 
             _customRectangleScreenshot.Bitmap = _fullscreenScreenshot.Bitmap.Crop(
                 new(

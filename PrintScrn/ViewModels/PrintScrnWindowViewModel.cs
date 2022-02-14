@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using PrintScrn.Command;
+using PrintScrn.Infrastructure.Command;
 
 namespace PrintScrn.ViewModels;
 

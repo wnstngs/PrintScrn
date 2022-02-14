@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace PrintScrn.Extensions;
+namespace PrintScrn.Infrastructure.Extensions;
 
 public static class BitmapExtension
 {

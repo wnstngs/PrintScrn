@@ -1,7 +1,7 @@
-﻿using PrintScrn.Extensions;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
-using PrintScrn.Command;
+using PrintScrn.Infrastructure.Command;
+using PrintScrn.Infrastructure.Extensions;
 
 namespace PrintScrn.ViewModels;
 

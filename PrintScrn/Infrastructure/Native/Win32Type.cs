@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace PrintScrn.Native;
+namespace PrintScrn.Infrastructure.Native;
 
 public static partial class Win32Type
 {

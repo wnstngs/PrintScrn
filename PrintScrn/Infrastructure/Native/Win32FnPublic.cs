@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PrintScrn.Native;
+namespace PrintScrn.Infrastructure.Native;
 
 public static partial class Win32Fn
 {

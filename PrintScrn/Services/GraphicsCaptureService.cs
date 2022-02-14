@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
-using PrintScrn.Extensions;
-using PrintScrn.Helpers;
+using PrintScrn.Infrastructure.Extensions;
+using PrintScrn.Infrastructure.Helpers;
 using PrintScrn.Models;
 using PrintScrn.Services.Interfaces;
 

@@ -1,4 +1,4 @@
-﻿namespace PrintScrn.Native;
+﻿namespace PrintScrn.Infrastructure.Native;
 
 public static class Win32Constant
 {

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xaml.Behaviors;
-using PrintScrn.Extensions;
 using PrintScrn.ViewModels;
 using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using PrintScrn.Infrastructure.Extensions;
 
 namespace PrintScrn.Behaviors;
 

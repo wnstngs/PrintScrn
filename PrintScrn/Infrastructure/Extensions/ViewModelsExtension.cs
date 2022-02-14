@@ -1,4 +1,4 @@
-﻿namespace PrintScrn.Extensions;
+﻿namespace PrintScrn.Infrastructure.Extensions;
 
 public static class ViewModelsExtension
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace PrintScrn.Command;
+namespace PrintScrn.Infrastructure.Command;
 
 public class RelayCommand<T> : ICommand
 {
