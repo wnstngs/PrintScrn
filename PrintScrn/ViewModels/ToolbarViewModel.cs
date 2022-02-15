@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using PrintScrn.Infrastructure;
 using PrintScrn.Infrastructure.Command;
 using PrintScrn.Infrastructure.Extensions;
 

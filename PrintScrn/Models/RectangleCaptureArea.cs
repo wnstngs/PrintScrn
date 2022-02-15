@@ -1,4 +1,5 @@
-﻿using PrintScrn.ViewModels;
+﻿using PrintScrn.Infrastructure;
+using PrintScrn.ViewModels;
 
 namespace PrintScrn.Models;
 

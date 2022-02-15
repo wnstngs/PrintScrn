@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace PrintScrn.ViewModels;
+namespace PrintScrn.Infrastructure;
 
 public abstract class Bindable : INotifyPropertyChanged
 {
