@@ -11,10 +11,16 @@ public static class BitmapExtension
 {
     public static BitmapImage? ToBitmapImage(this Bitmap? bmp)
     {
-        MemoryStream memstream = new();
-        bmp?.Save(memstream, System.Drawing.Imaging.ImageFormat.Bmp);
+        if (bmp == null)
+        {
+            FileLogger.LogWarning("'bmp' is null.");
+            return null;
+        }
 
-        BitmapImage? bitmapImage = new();
+        MemoryStream memstream = new();
+        bmp.Save(memstream, System.Drawing.Imaging.ImageFormat.Bmp);
+
+        BitmapImage bitmapImage = new();
         bitmapImage.BeginInit();
         memstream.Seek(0, SeekOrigin.Begin);
         bitmapImage.StreamSource = memstream;
@@ -22,9 +28,9 @@ public static class BitmapExtension
         {
             bitmapImage.EndInit();
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            MessageBox.Show("Oops, something went wrong!\n\nin: ToBitmapImage()", "PrintScrn - Screenshot");
+            FileLogger.LogError(e.Message);
             return null;
         }
 
@@ -35,6 +41,7 @@ public static class BitmapExtension
     {
         if (bmp == null)
         {
+            FileLogger.LogWarning("'bmp' is null.");
             return null;
         }
 
@@ -65,9 +72,9 @@ public static class BitmapExtension
                 bitmapData.Stride
             );
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            MessageBox.Show("Oops, something went wrong!\n\nin: ToBitmapSource()", "PrintScrn - Screenshot");
+            FileLogger.LogError(e.Message);
             return bitmapSource;
         }
         finally

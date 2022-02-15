@@ -6,7 +6,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:vm="clr-namespace:PrintScrn.ViewModels"
-        xmlns:b="clr-namespace:PrintScrn.Behaviors"
         xmlns:v="clr-namespace:PrintScrn.Views"
         mc:Ignorable="d"
         Title="Screenshot"

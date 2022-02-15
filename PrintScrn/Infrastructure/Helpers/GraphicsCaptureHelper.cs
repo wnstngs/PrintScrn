@@ -21,22 +21,14 @@ internal static class GraphicsCaptureHelper
         var hwnd = new WindowInteropHelper(Application.Current.MainWindow!).Handle;
         if (hwnd == IntPtr.Zero)
         {
-            MessageBox.Show(
-                "Window was not initialized at the moment of 'GetMonitorRectFromWindow()' call.",
-                "Fatal",
-                MessageBoxButton.OK, MessageBoxImage.Error
-            );
+            FileLogger.LogError("Window is not initialized yet.");
             throw new Win32Exception();
         }
 
         var hMonitor = Win32Fn.MonitorFromWindowSafe(hwnd, Win32Constant.MONITOR_DEFAULTTOPRIMARY);
         if (hMonitor == IntPtr.Zero)
         {
-            MessageBox.Show(
-                "MonitorFromWindowSafe() failed.",
-                "Fatal",
-                MessageBoxButton.OK, MessageBoxImage.Error
-            );
+            FileLogger.LogError("MonitorFromWindowSafe() failed.");
             throw new Win32Exception();
         }
 

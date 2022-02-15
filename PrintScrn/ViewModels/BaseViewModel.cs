@@ -22,7 +22,6 @@ public abstract class BaseViewModel : INotifyPropertyChanged
         {
             return false;
         }
-
         field = value;
         OnPropertyChanged(propertyName);
         return true;

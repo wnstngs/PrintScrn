@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xaml.Behaviors;
 using PrintScrn.ViewModels;
 using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using PrintScrn.Infrastructure;
 using PrintScrn.Infrastructure.Extensions;
+using PrintScrn.Models;
 
 namespace PrintScrn.Behaviors;
 
@@ -15,6 +16,8 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
     /// (i. e. coordinates where the user clicked first time).
     /// </summary>
     private Point _initialMousePos;
+
+    private RectangleCaptureArea _rectangleCaptureArea;
 
     #region Properties
 
@@ -156,11 +159,19 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
 
     #endregion
 
+    /// <summary>
+    /// Called after the behavior is attached to an AssociatedObject.
+    /// Assign PreviewMouseDown event handler.
+    /// </summary>
     protected override void OnAttached()
     {
-        AssociatedObject.MouseDown += OnMouseDown;
+        AssociatedObject.PreviewMouseDown += OnMouseDown;
     }
 
+    /// <summary>
+    /// Called when the behavior is being detached from its AssociatedObject, but before it has actually occurred.
+    /// Unregisters all event handlers.
+    /// </summary>
     protected override void OnDetaching()
     {
         AssociatedObject.PreviewMouseDown -= OnMouseDown;
@@ -201,6 +212,10 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
             // null because we only need to trigger setter.
             screenshotCanvasViewModel.SelectedRectImageSource = null;
         }
+        else
+        {
+            FileLogger.LogError("'SelectedRectImageSource' is not set: 'screenshotCanvasViewModel' is null.");
+        }
     }
 
     /// <summary>
@@ -220,7 +235,7 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         }
 
         var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
-        screenshotCanvasViewModel?.SnapshotCustomRectangle.Execute(null);
+        screenshotCanvasViewModel?.CaptureCustomRectangle.Execute(null);
 
         ResetProperties();
     }
@@ -257,6 +272,10 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         {
             // null because we only need to trigger setter.
             screenshotCanvasViewModel.SelectedRectImageSource = null;
+        }
+        else
+        {
+            FileLogger.LogError("'SelectedRectImageSource' is not set: 'screenshotCanvasViewModel' is null.");
         }
 
         AssociatedObject.InvalidateVisual();

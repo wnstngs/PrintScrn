@@ -7,7 +7,6 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:vm="clr-namespace:PrintScrn.ViewModels"
     xmlns:b="clr-namespace:PrintScrn.Behaviors"
-    xmlns:local="clr-namespace:PrintScrn.Views"
     mc:Ignorable="d">
     <UserControl.DataContext>
         <vm:ScreenshotCanvasViewModel />
@@ -18,69 +17,101 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Canvas
-        x:Name="RootScreenshotCanvas"
-        VerticalAlignment="Stretch"
-        HorizontalAlignment="Stretch"
-        Cursor="Cross"
-        SnapsToDevicePixels="True" >
-        <Canvas.Background>
-            <ImageBrush ImageSource="{Binding ScreenshotCanvasImageSource}"
-                        Stretch="None" />
-        </Canvas.Background>
-        <i:Interaction.Behaviors>
-            <b:RectangleSelectionBehavior
-                InitialMouseXPos="{Binding SelectedRectXPosition, Mode=OneWayToSource}"
-                InitialMouseYPos="{Binding SelectedRectYPosition, Mode=OneWayToSource}"
-                SelectedRectWidth="{Binding SelectedRectWidth, Mode=OneWayToSource}"
-                SelectedRectHeight="{Binding SelectedRectHeight, Mode=OneWayToSource}"
-                InitialMouseXPosScreenCoords="{Binding SelectedRectXPositionScreenCoords, Mode=OneWayToSource}"
-                InitialMouseYPosScreenCoords="{Binding SelectedRectYPositionScreenCoords, Mode=OneWayToSource}"
-                SelectedRectWidthScreenCoords="{Binding SelectedRectWidthScreenCoords, Mode=OneWayToSource}"
-                SelectedRectHeightScreenCoords="{Binding SelectedRectHeightScreenCoords, Mode=OneWayToSource}" />
-        </i:Interaction.Behaviors>
+    <Grid>
+        <StackPanel Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="4,4,0,0"
+                    IsHitTestVisible="False"
+                    ZIndex="9999999"
+                    Orientation="Horizontal">
+            <TextBlock Text="{Binding SelectedRectXPositionScreenCoords}"
+                       FontSize="13"
+                       FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
+                       Margin="4,1,4,1"/>
+            <TextBlock Text="{Binding SelectedRectYPositionScreenCoords}"
+                       FontSize="13"
+                       FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
+                       Margin="0,1,4,1" />
+            <TextBlock Text="{Binding SelectedRectWidthScreenCoords}"
+                       FontSize="13"
+                       FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
+                       Margin="0,1,4,1" />
+            <TextBlock Text="{Binding SelectedRectHeightScreenCoords}"
+                       FontSize="13"
+                       FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
+                       Margin="0,1,10,1" />
 
-        <Rectangle
+            <TextBlock Text="{Binding SelectedRectWidth}"
+                       FontSize="13"
+                       FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
+                       Margin="0,1,4,1" />
+            <TextBlock Text="{Binding SelectedRectHeight}"
+                       FontSize="13"
+                       FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
+                       Margin="0,1,4,1" />
+        </StackPanel>
+
+        <Canvas
+            x:Name="RootScreenshotCanvas"
+            Grid.Row="0"
+            Grid.Column="0"
             VerticalAlignment="Stretch"
             HorizontalAlignment="Stretch"
-            Width="{Binding ActualWidth, ElementName=RootScreenshotCanvas}"
-            Height="{Binding ActualHeight, ElementName=RootScreenshotCanvas}"
-            Fill="{Binding MaskRectBackground}"
-            Opacity="{Binding MaskRectOpacity}"
-            SnapsToDevicePixels="True" />
-
-        <Rectangle
-            Canvas.Top="{Binding SelectedRectYPosition}"
-            Canvas.Left="{Binding SelectedRectXPosition}"
-            Width="{Binding SelectedRectWidth}"
-            Height="{Binding SelectedRectHeight}"
-            Stroke="{StaticResource ModernUi_LightTheme_LightGrayColor}"
-            StrokeThickness="0.5"
-            StrokeDashArray="10"
-            StrokeDashOffset="4"
-            StrokeDashCap="Round"
+            Cursor="Cross"
             SnapsToDevicePixels="True">
-            <Rectangle.Fill>
-                <ImageBrush
-                    Stretch="None"
-                    ImageSource="{Binding SelectedRectImageSource}" />
-            </Rectangle.Fill>
+            <Canvas.Background>
+                <ImageBrush ImageSource="{Binding ScreenshotCanvasImageSource}"
+                            Stretch="None" />
+            </Canvas.Background>
+            <i:Interaction.Behaviors>
+                <b:RectangleSelectionBehavior
+                    InitialMouseXPos="{Binding SelectedRectXPosition, Mode=OneWayToSource}"
+                    InitialMouseYPos="{Binding SelectedRectYPosition, Mode=OneWayToSource}"
+                    SelectedRectWidth="{Binding SelectedRectWidth, Mode=OneWayToSource}"
+                    SelectedRectHeight="{Binding SelectedRectHeight, Mode=OneWayToSource}"
+                    InitialMouseXPosScreenCoords="{Binding SelectedRectXPositionScreenCoords, Mode=OneWayToSource}"
+                    InitialMouseYPosScreenCoords="{Binding SelectedRectYPositionScreenCoords, Mode=OneWayToSource}"
+                    SelectedRectWidthScreenCoords="{Binding SelectedRectWidthScreenCoords, Mode=OneWayToSource}"
+                    SelectedRectHeightScreenCoords="{Binding SelectedRectHeightScreenCoords, Mode=OneWayToSource}" />
+            </i:Interaction.Behaviors>
 
-            <Rectangle.Triggers>
-                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation
-                                From="0"
-                                To="20"
-                                RepeatBehavior="Forever"
-                                By="1"
-                                SpeedRatio="1.05"
-                                Storyboard.TargetProperty="StrokeDashOffset" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Rectangle.Triggers>
-        </Rectangle>
-    </Canvas>
+            <Rectangle Canvas.Top="{Binding SelectedRectYPosition}"
+                       Canvas.Left="{Binding SelectedRectXPosition}"
+                       Width="{Binding SelectedRectWidth}"
+                       Height="{Binding SelectedRectHeight}"
+                       Fill="Transparent"
+                       Stroke="White"
+                       StrokeThickness="1.2"
+                       SnapsToDevicePixels="True" />
+            <Rectangle
+                Canvas.Top="{Binding SelectedRectYPosition}"
+                Canvas.Left="{Binding SelectedRectXPosition}"
+                Width="{Binding SelectedRectWidth}"
+                Height="{Binding SelectedRectHeight}"
+                Fill="#25000000"
+                Stroke="Black"
+                StrokeThickness="1.2"
+                StrokeDashArray="6"
+                StrokeDashCap="Round"
+                SnapsToDevicePixels="True">
+                <Rectangle.Triggers>
+                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <!-- `To` is = to `StrokeDashArray` * 2 -->
+                                <DoubleAnimation
+                                    From="0"
+                                    To="12"
+                                    By="1"
+                                    RepeatBehavior="Forever"
+                                    SpeedRatio="0.8"
+                                    Storyboard.TargetProperty="StrokeDashOffset" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Rectangle.Triggers>
+            </Rectangle>
+        </Canvas>
+    </Grid>
+
 </UserControl>

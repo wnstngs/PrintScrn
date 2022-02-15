@@ -9,8 +9,22 @@ public static class FileLogger
 {
     private static StreamWriter? _writer;
 
+    /// <summary>
+    /// Initializes an instance of the file logger.
+    /// After use must be closed via <see cref="Close"/>.
+    /// </summary>
+    /// <param name="path">The complete file path to write to. path can be a file name.</param>
     public static void Init(string path)
     {
+        try
+        {
+            File.Delete(path);
+        }
+        catch (Exception e)
+        {
+            Trace.WriteLine($"{System.Reflection.MethodBase.GetCurrentMethod()?.Name}: {e.Message}");
+        }
+
         try
         {
             _writer = new(path, append: true);
@@ -21,6 +35,9 @@ public static class FileLogger
         }
     }
 
+    /// <summary>
+    /// Closes stream of the file logger.
+    /// </summary>
     public static void Close()
     {
         try
@@ -33,21 +50,84 @@ public static class FileLogger
         }
     }
 
-    public static async void Log(
+    /// <summary>
+    /// Logs informational message.
+    /// </summary>
+    /// <param name="message">Message to log.</param>
+    /// <param name="line">-</param>
+    /// <param name="caller">-</param>
+    public static void LogInfo(
         string message,
-        [CallerLineNumber] int line = 0,
-        [CallerMemberName] string caller = ""
+        [CallerLineNumber] int line = -1,
+        [CallerMemberName] string caller = "---"
     )
+    {
+        const string level = "INFO";
+        WriteLog($"[{level}] [{caller}:{line}] {message}");
+    }
+
+    /// <summary>
+    /// Logs warning message.
+    /// </summary>
+    /// <param name="message">Message to log.</param>
+    /// <param name="line">-</param>
+    /// <param name="caller">-</param>
+    public static void LogWarning(
+        string message,
+        [CallerLineNumber] int line = -1,
+        [CallerMemberName] string caller = "---"
+    )
+    {
+        const string level = "WARN";
+        WriteLog($"[{level}] [{caller}:{line}] {message}");
+    }
+
+    /// <summary>
+    /// Logs error message.
+    /// </summary>
+    /// <param name="message">Message to log.</param>
+    /// <param name="line">-</param>
+    /// <param name="caller">-</param>
+    public static void LogError(
+        string message,
+        [CallerLineNumber] int line = -1,
+        [CallerMemberName] string caller = "---"
+    )
+    {
+        const string level = "ERROR";
+        WriteLog($"[{level}] [{caller}:{line}] {message}");
+    }
+
+    /// <summary>
+    /// Logs critical error message.
+    /// </summary>
+    /// <param name="message">Message to log.</param>
+    /// <param name="line">-</param>
+    /// <param name="caller">-</param>
+    public static void LogFatal(
+        string message,
+        [CallerLineNumber] int line = -1,
+        [CallerMemberName] string caller = "---"
+    )
+    {
+        const string level = "FATAL";
+        WriteLog($"[{level}] [{caller}:{line}] {message}");
+    }
+
+    /// <summary>
+    /// Writes a string to the log stream.
+    /// </summary>
+    /// <param name="message">Message to log.</param>
+    private static async void WriteLog(string message)
     {
         if (_writer == null)
         {
             return;
         }
 
-        var logMessage = $"[{caller}:{line}] {message}";
         try
         {
-            await _writer.WriteLineAsync(logMessage);
+            await _writer.WriteLineAsync(message);
         }
         catch (Exception e)
         {

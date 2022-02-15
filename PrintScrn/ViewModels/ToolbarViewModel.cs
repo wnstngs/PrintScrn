@@ -11,7 +11,7 @@ public class ToolbarViewModel : BaseViewModel
     {
         ViewModels.Instance.ViewModelsStore.Add(this);
 
-        DelegateSnapshotFullscreen = new RelayCommand(OnDelegateSnapshotFullscreen);
+        DelegateCaptureFullscreen = new RelayCommand(OnDelegateCaptureFullscreen);
     }
 
     ~ToolbarViewModel()
@@ -33,26 +33,38 @@ public class ToolbarViewModel : BaseViewModel
 
     #endregion
 
-    #region CustomRectangleCaptureMode
+    #region IsCustomRectangleCaptureMode
 
-    private bool _customRectangleCaptureMode = true;
+    private bool _isCustomRectangleCaptureMode = true;
 
-    public bool CustomRectangleCaptureMode
+    public bool IsCustomRectangleCaptureMode
     {
-        get => _customRectangleCaptureMode;
-        set => Set(ref _customRectangleCaptureMode, value);
+        get => _isCustomRectangleCaptureMode;
+        set => Set(ref _isCustomRectangleCaptureMode, value);
     }
 
     #endregion
 
-    #region WindowRectangleCaptureMode
+    #region IsWindowRectangleCaptureMode
 
-    private bool _windowRectangleCaptureMode = false;
+    private bool _isIsWindowRectangleCaptureMode = false;
 
-    public bool WindowRectangleCaptureMode
+    public bool IsWindowRectangleCaptureMode
     {
-        get => _windowRectangleCaptureMode;
-        set => Set(ref _windowRectangleCaptureMode, value);
+        get => _isIsWindowRectangleCaptureMode;
+        set => Set(ref _isIsWindowRectangleCaptureMode, value);
+    }
+
+    #endregion
+
+    #region CaptureOrRecordButtonLabel
+
+    private string _captureOrRecordButtonLabel = "Capture";
+
+    public string CaptureOrRecordButtonLabel
+    {
+        get => _captureOrRecordButtonLabel;
+        set => Set(ref _captureOrRecordButtonLabel, value);
     }
 
     #endregion
@@ -61,14 +73,14 @@ public class ToolbarViewModel : BaseViewModel
 
     #region Commands
 
-    #region DelegateSnapshotFullscreen
+    #region DelegateCaptureFullscreen
 
-    public ICommand DelegateSnapshotFullscreen { get; }
+    public ICommand DelegateCaptureFullscreen { get; }
 
-    private void OnDelegateSnapshotFullscreen()
+    private void OnDelegateCaptureFullscreen()
     {
         var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
-        screenshotCanvasViewModel?.SnapshotFullscreen.Execute(null);
+        screenshotCanvasViewModel?.CaptureFullscreen.Execute(null);
     }
 
     #endregion

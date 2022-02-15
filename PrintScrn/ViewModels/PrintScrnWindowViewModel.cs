@@ -1,5 +1,6 @@
-﻿using System.Windows;
+﻿ using System.Windows;
 using System.Windows.Input;
+using PrintScrn.Infrastructure;
 using PrintScrn.Infrastructure.Command;
 
 namespace PrintScrn.ViewModels;
@@ -77,8 +78,16 @@ internal class PrintScrnWindowViewModel : BaseViewModel
 
     #region InitializeWindow
 
+    /// <summary>
+    /// Is executed when the main application window is initialized.
+    /// </summary>
     public ICommand InitializeWindow { get; }
-    
+
+    /// <summary>
+    /// Action of the <see cref="InitializeWindow"/> command. Needed to set
+    /// <see cref="MonitorWidth"/> and <see cref="MonitorHeight"/> properties.
+    /// </summary>
+    /// <param name="parameter">Initialized window.</param>
     private void OnInitializeWindow(Window parameter)
     {
         var presentationSrc = PresentationSource.FromVisual(parameter);
@@ -87,6 +96,10 @@ internal class PrintScrnWindowViewModel : BaseViewModel
             var m = presentationSrc.CompositionTarget.TransformToDevice;
             MonitorWidth = (int)(SystemParameters.PrimaryScreenWidth * m.M11);
             MonitorHeight = (int)(SystemParameters.PrimaryScreenHeight * m.M22);
+        }
+        else
+        {
+            FileLogger.LogError("'presentationSrc' or 'presentationSrc.CompositionTarget' is null.");
         }
     }
 

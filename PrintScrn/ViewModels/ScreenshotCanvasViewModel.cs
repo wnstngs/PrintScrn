@@ -30,8 +30,8 @@ public class ScreenshotCanvasViewModel : BaseViewModel
         _customRectangleScreenshot = new Screenshot();
 
         CanvasInitialize = new RelayCommand(OnCanvasInitialize);
-        SnapshotCustomRectangle = new RelayCommand(OnSnapshotCustomRectangle);
-        SnapshotFullscreen = new RelayCommand(OnSnapshotFullscreen);
+        CaptureCustomRectangle = new RelayCommand(OnCaptureCustomRectangle);
+        CaptureFullscreen = new RelayCommand(OnCaptureFullscreen);
     }
 
     ~ScreenshotCanvasViewModel()
@@ -40,30 +40,6 @@ public class ScreenshotCanvasViewModel : BaseViewModel
     }
 
     #region Properties
-
-    #region MaskRectBackground
-
-    private System.Windows.Media.Brush _maskRectBackground = new SolidColorBrush(Colors.Black);
-
-    public System.Windows.Media.Brush MaskRectBackground
-    {
-        get => _maskRectBackground;
-        set => Set(ref _maskRectBackground, value);
-    }
-
-    #endregion
-
-    #region MaskRectOpacity
-
-    private double _maskRectOpacity = 0.4;
-
-    public double MaskRectOpacity
-    {
-        get => _maskRectOpacity;
-        set => Set(ref _maskRectOpacity, value);
-    }
-
-    #endregion
 
     #region ScreenImageSource
 
@@ -95,18 +71,6 @@ public class ScreenshotCanvasViewModel : BaseViewModel
             {
                 return;
             }
-
-            /*FileLogger.Log(message:
-                "\n" +
-                $"_selectedRectXPositionScreenCoords: {_selectedRectXPositionScreenCoords}" +
-                "\n" +
-                $"_selectedRectYPositionScreenCoords: {_selectedRectYPositionScreenCoords}" +
-                "\n" +
-                $"_selectedRectWidthScreenCoords: {_selectedRectWidthScreenCoords}" +
-                "\n" +
-                $"_selectedRectHeightScreenCoords: {_selectedRectHeightScreenCoords}" +
-                "\n"
-            );*/
 
             _customRectangleScreenshot.Bitmap = _fullscreenScreenshot.Bitmap.Crop(
                 new(
@@ -235,13 +199,24 @@ public class ScreenshotCanvasViewModel : BaseViewModel
     private void OnCanvasInitialize()
     {
         var windowViewModel = ViewModelsExtension.FindViewModel<PrintScrnWindowViewModel>();
-        if (windowViewModel != null) windowViewModel.WindowOpacity = 0.0;
+        if (windowViewModel != null)
+        {
+            windowViewModel.WindowOpacity = 0.0;
+        }
+        else
+        {
+            FileLogger.LogWarning("windowViewModel is null.");
+        }
 
-        _fullscreenScreenshot = _graphicsCaptureService.SnapshotFullscreen();
+        _fullscreenScreenshot = _graphicsCaptureService.CaptureFullscreen();
 
         if (_fullscreenScreenshot?.BitmapImage != null)
         {
             ScreenshotCanvasImageSource = _fullscreenScreenshot.BitmapImage;
+        }
+        else
+        {
+            FileLogger.LogError("BitmapImage is null.");
         }
 
         if (windowViewModel != null)
@@ -253,14 +228,15 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
     #endregion
 
-    #region SnapshotFullscreen
+    #region CaptureFullscreen
 
-    public ICommand SnapshotFullscreen { get; }
+    public ICommand CaptureFullscreen { get; }
 
-    private void OnSnapshotFullscreen()
+    private void OnCaptureFullscreen()
     {
         if (_fullscreenScreenshot?.BitmapSource == null)
         {
+            FileLogger.LogError("BitmapSource is null.");
             return;
         }
         Clipboard.SetImage(_fullscreenScreenshot.BitmapSource);
@@ -269,11 +245,11 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
     #endregion
 
-    #region SnapshotCustomRectangle
+    #region CaptureCustomRectangle
 
-    public ICommand SnapshotCustomRectangle { get; }
+    public ICommand CaptureCustomRectangle { get; }
 
-    private void OnSnapshotCustomRectangle()
+    private void OnCaptureCustomRectangle()
     {
         if (SelectedRectHeight < MinSelectedRectSize || SelectedRectWidth < MinSelectedRectSize)
         {
@@ -285,9 +261,14 @@ public class ScreenshotCanvasViewModel : BaseViewModel
             _customRectangleScreenshot.BitmapSource = _customRectangleScreenshot.Bitmap.ToBitmapSource();
             if (_customRectangleScreenshot?.BitmapSource == null)
             {
+                FileLogger.LogError("BitmapSource is null.");
                 return;
             }
             Clipboard.SetImage(_customRectangleScreenshot.BitmapSource);
+        }
+        else
+        {
+            FileLogger.LogError("_customRectangleScreenshot is null.");
         }
 
         Application.Current.Shutdown(0);

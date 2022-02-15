@@ -4,7 +4,7 @@ namespace PrintScrn.Services.Interfaces;
 
 interface IGraphicsCapture
 {
-    Screenshot? SnapshotFullscreen();
+    Screenshot? CaptureFullscreen();
 
-    Screenshot SnapshotCustomRectangle(RectangleCaptureArea rectangle);
+    Screenshot CaptureCustomRectangle(RectangleCaptureArea rectangle);
 }
