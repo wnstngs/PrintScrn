@@ -5,7 +5,7 @@ using PrintScrn.Infrastructure.Extensions;
 
 namespace PrintScrn.ViewModels;
 
-public class ToolbarViewModel : BaseViewModel
+public class ToolbarViewModel : Bindable
 {
     public ToolbarViewModel()
     {

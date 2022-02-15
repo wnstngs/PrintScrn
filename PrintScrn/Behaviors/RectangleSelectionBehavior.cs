@@ -3,12 +3,15 @@ using PrintScrn.ViewModels;
 using System;
 using System.Windows;
 using System.Windows.Input;
-using PrintScrn.Infrastructure;
 using PrintScrn.Infrastructure.Extensions;
 using PrintScrn.Models;
+using Point = System.Windows.Point;
 
 namespace PrintScrn.Behaviors;
 
+/// <summary>
+/// The RectangleSelectionBehavior is responsible for selection of a rectangle on the ScreenshotCanvas.
+/// </summary>
 public class RectangleSelectionBehavior : Behavior<UIElement>
 {
     /// <summary>
@@ -17,142 +20,21 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
     /// </summary>
     private Point _initialMousePos;
 
-    private RectangleCaptureArea _rectangleCaptureArea;
-
     #region Properties
 
-    #region InitialMouseXPos
+    #region SelectedRectangleCaptureArea
 
-    public static readonly DependencyProperty InitialMouseXPosProperty = DependencyProperty.Register(
-        nameof(InitialMouseXPos),
-        typeof(double),
+    public static readonly DependencyProperty SelectedRectangleProperty = DependencyProperty.Register(
+        nameof(SelectedRectangle),
+        typeof(RectangleCaptureArea),
         typeof(RectangleSelectionBehavior),
-        new(default(double))
+        new(default(RectangleCaptureArea))
     );
 
-    public double InitialMouseXPos
+    public RectangleCaptureArea SelectedRectangle
     {
-        get => (double)GetValue(InitialMouseXPosProperty);
-        set => SetValue(InitialMouseXPosProperty, value);
-    }
-
-    #endregion
-
-    #region InitialMouseYPos
-
-    public static readonly DependencyProperty InitialMouseYPosProperty = DependencyProperty.Register(
-        nameof(InitialMouseYPos),
-        typeof(double),
-        typeof(RectangleSelectionBehavior),
-        new(default(double))
-    );
-
-    public double InitialMouseYPos
-    {
-        get => (double)GetValue(InitialMouseYPosProperty);
-        set => SetValue(InitialMouseYPosProperty, value);
-    }
-
-    #endregion
-
-    #region SelectedRectWidth
-
-    public static readonly DependencyProperty SelectedRectWidthProperty = DependencyProperty.Register(
-        nameof(SelectedRectWidth),
-        typeof(double),
-        typeof(RectangleSelectionBehavior),
-        new(default(double))
-    );
-
-    public double SelectedRectWidth
-    {
-        get => (double)GetValue(SelectedRectWidthProperty);
-        set => SetValue(SelectedRectWidthProperty, value);
-    }
-
-    #endregion
-
-    #region SelectedRectHeight
-
-    public static readonly DependencyProperty SelectedRectHeightProperty = DependencyProperty.Register(
-        nameof(SelectedRectHeight),
-        typeof(double),
-        typeof(RectangleSelectionBehavior),
-        new(default(double))
-    );
-
-    public double SelectedRectHeight
-    {
-        get => (double)GetValue(SelectedRectHeightProperty);
-        set => SetValue(SelectedRectHeightProperty, value);
-    }
-
-    #endregion
-
-    #region InitialMouseXPosScreenCoords
-
-    public static readonly DependencyProperty InitialMouseXPosPropertyScreenCoords = DependencyProperty.Register(
-        nameof(InitialMouseXPosScreenCoords),
-        typeof(double),
-        typeof(RectangleSelectionBehavior),
-        new(default(double))
-    );
-
-    public double InitialMouseXPosScreenCoords
-    {
-        get => (double)GetValue(InitialMouseXPosPropertyScreenCoords);
-        set => SetValue(InitialMouseXPosPropertyScreenCoords, value);
-    }
-
-    #endregion
-
-    #region InitialMouseYPosScreenCoords
-
-    public static readonly DependencyProperty InitialMouseYPosPropertyScreenCoords = DependencyProperty.Register(
-        nameof(InitialMouseYPosScreenCoords),
-        typeof(double),
-        typeof(RectangleSelectionBehavior),
-        new(default(double))
-    );
-
-    public double InitialMouseYPosScreenCoords
-    {
-        get => (double)GetValue(InitialMouseYPosPropertyScreenCoords);
-        set => SetValue(InitialMouseYPosPropertyScreenCoords, value);
-    }
-
-    #endregion
-
-    #region SelectedRectWidthScreenCoords
-
-    public static readonly DependencyProperty SelectedRectWidthPropertyScreenCoords = DependencyProperty.Register(
-        nameof(SelectedRectWidthScreenCoords),
-        typeof(double),
-        typeof(RectangleSelectionBehavior),
-        new(default(double))
-    );
-
-    public double SelectedRectWidthScreenCoords
-    {
-        get => (double)GetValue(SelectedRectWidthPropertyScreenCoords);
-        set => SetValue(SelectedRectWidthPropertyScreenCoords, value);
-    }
-
-    #endregion
-
-    #region SelectedRectHeightScreenCoords
-
-    public static readonly DependencyProperty SelectedRectHeightPropertyScreenCoords = DependencyProperty.Register(
-        nameof(SelectedRectHeightScreenCoords),
-        typeof(double),
-        typeof(RectangleSelectionBehavior),
-        new(default(double))
-    );
-
-    public double SelectedRectHeightScreenCoords
-    {
-        get => (double)GetValue(SelectedRectHeightPropertyScreenCoords);
-        set => SetValue(SelectedRectHeightPropertyScreenCoords, value);
+        get => (RectangleCaptureArea) GetValue(SelectedRectangleProperty);
+        set => SetValue(SelectedRectangleProperty, value);
     }
 
     #endregion
@@ -165,6 +47,7 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
     /// </summary>
     protected override void OnAttached()
     {
+        SelectedRectangle = new();
         AssociatedObject.PreviewMouseDown += OnMouseDown;
     }
 
@@ -192,30 +75,21 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         }
 
         var toolbarViewModel = ViewModelsExtension.FindViewModel<ToolbarViewModel>();
-        if (toolbarViewModel != null) toolbarViewModel.ToolbarVisibility = Visibility.Collapsed;
+        if (toolbarViewModel != null)
+        {
+            // Hide a toolbar
+            toolbarViewModel.ToolbarVisibility = Visibility.Collapsed;
+        }
 
-        ResetProperties();
+        ResetSelectedRectangle();
 
         _initialMousePos = e.GetPosition(AssociatedObject);
 
         AssociatedObject.MouseMove += OnMouseMove;
         AssociatedObject.MouseUp += OnMouseUp;
 
-        InitialMouseXPos = _initialMousePos.X;
-        InitialMouseYPos = _initialMousePos.Y;
-        InitialMouseXPosScreenCoords = AssociatedObject.PointToScreen(_initialMousePos).X;
-        InitialMouseYPosScreenCoords = AssociatedObject.PointToScreen(_initialMousePos).Y;
-
-        var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
-        if (screenshotCanvasViewModel != null)
-        {
-            // null because we only need to trigger setter.
-            screenshotCanvasViewModel.SelectedRectImageSource = null;
-        }
-        else
-        {
-            FileLogger.LogError("'SelectedRectImageSource' is not set: 'screenshotCanvasViewModel' is null.");
-        }
+        SelectedRectangle.X = _initialMousePos.X;
+        SelectedRectangle.Y = _initialMousePos.Y;
     }
 
     /// <summary>
@@ -231,13 +105,9 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         var toolbarViewModel = ViewModelsExtension.FindViewModel<ToolbarViewModel>();
         if (toolbarViewModel != null)
         {
+            // Show a toolbar
             toolbarViewModel.ToolbarVisibility = Visibility.Visible;
         }
-
-        var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
-        screenshotCanvasViewModel?.CaptureCustomRectangle.Execute(null);
-
-        ResetProperties();
     }
 
     /// <summary>
@@ -253,46 +123,24 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         }
 
         var currentPos = e.GetPosition(AssociatedObject);
-        var currentPosScreenCoords = AssociatedObject.PointToScreen(e.GetPosition(AssociatedObject));
-
         var delta = currentPos - _initialMousePos;
-        var deltaScreenCoords = currentPosScreenCoords - AssociatedObject.PointToScreen(_initialMousePos);
 
         // TODO: Looks like with '+ 1' we get correct values, but need to double-check.
-        // Without it, selecting whole screen I have X = 0, Y = 0, W = 2559, H = 1439 for 2560x1440 monitor.
-        // Width and height values are incorrect (they are equal to end mouse position which actually is correct),
-        // but we need to think how to correctly find width and height of the selected rectangle.
-        SelectedRectWidth = Math.Round(delta.X + 1);
-        SelectedRectHeight = Math.Round(delta.Y + 1);
-        SelectedRectWidthScreenCoords = Math.Round(deltaScreenCoords.X + 1);
-        SelectedRectHeightScreenCoords = Math.Round(deltaScreenCoords.Y + 1);
+        SelectedRectangle.Width = Math.Round(delta.X + 1);
+        SelectedRectangle.Height = Math.Round(delta.Y + 1);
 
-        var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
-        if (screenshotCanvasViewModel != null)
-        {
-            // null because we only need to trigger setter.
-            screenshotCanvasViewModel.SelectedRectImageSource = null;
-        }
-        else
-        {
-            FileLogger.LogError("'SelectedRectImageSource' is not set: 'screenshotCanvasViewModel' is null.");
-        }
-
+        // Force redraw
         AssociatedObject.InvalidateVisual();
     }
 
     /// <summary>
     /// Zeroes all properties related to the behavior.
     /// </summary>
-    private void ResetProperties()
+    private void ResetSelectedRectangle()
     {
-        InitialMouseXPos = 0.0;
-        InitialMouseYPos = 0.0;
-        SelectedRectWidth = 0.0;
-        SelectedRectHeight = 0.0;
-        InitialMouseXPosScreenCoords = 0.0;
-        InitialMouseYPosScreenCoords = 0.0;
-        SelectedRectWidthScreenCoords = 0.0;
-        SelectedRectHeightScreenCoords = 0.0;
+        SelectedRectangle.X = 0;
+        SelectedRectangle.Y = 0;
+        SelectedRectangle.Width = 0;
+        SelectedRectangle.Height = 0;
     }
 }

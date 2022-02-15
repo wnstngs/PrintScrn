@@ -5,7 +5,7 @@ using PrintScrn.Infrastructure.Command;
 
 namespace PrintScrn.ViewModels;
 
-internal class PrintScrnWindowViewModel : BaseViewModel
+internal class PrintScrnWindowViewModel : Bindable
 {
     public PrintScrnWindowViewModel()
     {

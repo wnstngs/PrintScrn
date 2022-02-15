@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using PrintScrn.Infrastructure;
@@ -11,7 +10,7 @@ using PrintScrn.Services.Interfaces;
 
 namespace PrintScrn.ViewModels;
 
-public class ScreenshotCanvasViewModel : BaseViewModel
+public class ScreenshotCanvasViewModel : Bindable
 {
     private const int MinSelectedRectSize = 10;
 
@@ -19,15 +18,11 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
     private Screenshot? _fullscreenScreenshot;
 
-    private Screenshot? _customRectangleScreenshot;
-
     public ScreenshotCanvasViewModel()
     {
         ViewModels.Instance.ViewModelsStore.Add(this);
 
         _graphicsCaptureService = new GraphicsCaptureService();
-
-        _customRectangleScreenshot = new Screenshot();
 
         CanvasInitialize = new RelayCommand(OnCanvasInitialize);
         CaptureCustomRectangle = new RelayCommand(OnCaptureCustomRectangle);
@@ -53,137 +48,14 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
     #endregion
 
-    #region SelectedRectImageSource
+    #region CustomSelectedRectangle
 
-    private ImageSource? _selectedRectImageSource;
+    private RectangleCaptureArea? _customSelectedRectangle;
 
-    public ImageSource? SelectedRectImageSource
+    public RectangleCaptureArea? CustomSelectedRectangle
     {
-        get => _selectedRectImageSource;
-        set
-        {
-            if (_customRectangleScreenshot == null || _fullscreenScreenshot == null)
-            {
-                return;
-            }
-
-            if (_selectedRectXPositionScreenCoords < 0 || _selectedRectYPositionScreenCoords < 0)
-            {
-                return;
-            }
-
-            _customRectangleScreenshot.Bitmap = _fullscreenScreenshot.Bitmap.Crop(
-                new(
-                    (int)Math.Round(_selectedRectXPositionScreenCoords),
-                    (int)Math.Round(_selectedRectYPositionScreenCoords),
-                    (int)Math.Round(_selectedRectWidthScreenCoords),
-                    (int)Math.Round(_selectedRectHeightScreenCoords)
-                )
-            );
-
-            if (_customRectangleScreenshot.Bitmap == null)
-            {
-                return;
-            }
-
-            Set(ref _selectedRectImageSource, _customRectangleScreenshot.Bitmap.ToBitmapImage());
-        }
-    }
-
-    #endregion
-
-    #region SelectedRectXPosition
-
-    private double _selectedRectXPosition;
-
-    public double SelectedRectXPosition
-    {
-        get => _selectedRectXPosition;
-        set => Set(ref _selectedRectXPosition, value);
-    }
-
-    #endregion
-
-    #region SelectedRectYPosition
-
-    private double _selectedRectYPosition;
-
-    public double SelectedRectYPosition
-    {
-        get => _selectedRectYPosition;
-        set => Set(ref _selectedRectYPosition, value);
-    }
-
-    #endregion
-
-    #region SelectedRectWidth
-
-    private double _selectedRectWidth;
-
-    public double SelectedRectWidth
-    {
-        get => _selectedRectWidth;
-        set => Set(ref _selectedRectWidth, value);
-    }
-
-    #endregion
-
-    #region SelectedRectHeight
-
-    private double _selectedRectHeight;
-
-    public double SelectedRectHeight
-    {
-        get => _selectedRectHeight;
-        set => Set(ref _selectedRectHeight, value);
-    }
-
-    #endregion
-
-    #region SelectedRectXPositionScreenCoords
-
-    private double _selectedRectXPositionScreenCoords;
-
-    public double SelectedRectXPositionScreenCoords
-    {
-        get => _selectedRectXPositionScreenCoords;
-        set => Set(ref _selectedRectXPositionScreenCoords, value);
-    }
-
-    #endregion
-
-    #region SelectedRectYPositionScreenCoords
-
-    private double _selectedRectYPositionScreenCoords;
-
-    public double SelectedRectYPositionScreenCoords
-    {
-        get => _selectedRectYPositionScreenCoords;
-        set => Set(ref _selectedRectYPositionScreenCoords, value);
-    }
-
-    #endregion
-
-    #region SelectedRectWidthScreenCoords
-
-    private double _selectedRectWidthScreenCoords;
-
-    public double SelectedRectWidthScreenCoords
-    {
-        get => _selectedRectWidthScreenCoords;
-        set => Set(ref _selectedRectWidthScreenCoords, value);
-    }
-
-    #endregion
-
-    #region SelectedRectHeightScreenCoords
-
-    private double _selectedRectHeightScreenCoords;
-
-    public double SelectedRectHeightScreenCoords
-    {
-        get => _selectedRectHeightScreenCoords;
-        set => Set(ref _selectedRectHeightScreenCoords, value);
+        get => _customSelectedRectangle;
+        set => Set(ref _customSelectedRectangle, value);
     }
 
     #endregion
@@ -251,11 +123,19 @@ public class ScreenshotCanvasViewModel : BaseViewModel
 
     private void OnCaptureCustomRectangle()
     {
-        if (SelectedRectHeight < MinSelectedRectSize || SelectedRectWidth < MinSelectedRectSize)
+        if (CustomSelectedRectangle == null)
+        {
+            FileLogger.LogError("CustomSelectedRectangle is null.");
+            return;
+        }
+
+        if (CustomSelectedRectangle.Height < MinSelectedRectSize || 
+            CustomSelectedRectangle.Width < MinSelectedRectSize)
         {
             return;
         }
 
+        /* TODO
         if (_customRectangleScreenshot != null)
         {
             _customRectangleScreenshot.BitmapSource = _customRectangleScreenshot.Bitmap.ToBitmapSource();
@@ -272,6 +152,7 @@ public class ScreenshotCanvasViewModel : BaseViewModel
         }
 
         Application.Current.Shutdown(0);
+        */
     }
 
     #endregion

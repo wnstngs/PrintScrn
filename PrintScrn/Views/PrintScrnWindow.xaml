@@ -9,7 +9,6 @@
         xmlns:v="clr-namespace:PrintScrn.Views"
         mc:Ignorable="d"
         Title="Screenshot"
-        Topmost="True"
         WindowStyle="None"
         WindowState="Maximized"
         ShowInTaskbar="{Binding ShowInTaskbar}"

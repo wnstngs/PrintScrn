@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace PrintScrn.ViewModels;
 
-public abstract class BaseViewModel : INotifyPropertyChanged
+public abstract class Bindable : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 

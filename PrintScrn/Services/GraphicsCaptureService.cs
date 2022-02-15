@@ -42,12 +42,12 @@ public class GraphicsCaptureService : IGraphicsCapture
 
     private Bitmap? CaptureBitmapFromScreen(RectangleCaptureArea rectangle)
     {
-        Bitmap? bitmap = new(rectangle.Width, rectangle.Height);
+        Bitmap? bitmap = new((int) rectangle.Width, (int) rectangle.Height);
         var gfx = Graphics.FromImage(bitmap);
         gfx.CompositingQuality = CompositingQuality.HighQuality;
         gfx.SmoothingMode = SmoothingMode.HighQuality;
         gfx.InterpolationMode = InterpolationMode.HighQualityBicubic;
-        gfx.CopyFromScreen(rectangle.X, rectangle.Y, 0, 0, bitmap.Size);
+        gfx.CopyFromScreen((int) rectangle.X, (int) rectangle.Y, 0, 0, bitmap.Size);
         return bitmap;
     }
 }

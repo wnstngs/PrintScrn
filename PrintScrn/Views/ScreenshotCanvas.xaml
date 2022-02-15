@@ -24,31 +24,22 @@
                     IsHitTestVisible="False"
                     ZIndex="9999999"
                     Orientation="Horizontal">
-            <TextBlock Text="{Binding SelectedRectXPositionScreenCoords}"
+            <TextBlock Text="{Binding CustomSelectedRectangle.X}"
                        FontSize="13"
                        FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
                        Margin="4,1,4,1"/>
-            <TextBlock Text="{Binding SelectedRectYPositionScreenCoords}"
+            <TextBlock Text="{Binding CustomSelectedRectangle.Y}"
                        FontSize="13"
                        FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
                        Margin="0,1,4,1" />
-            <TextBlock Text="{Binding SelectedRectWidthScreenCoords}"
+            <TextBlock Text="{Binding CustomSelectedRectangle.Width}"
                        FontSize="13"
                        FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
                        Margin="0,1,4,1" />
-            <TextBlock Text="{Binding SelectedRectHeightScreenCoords}"
+            <TextBlock Text="{Binding CustomSelectedRectangle.Height}"
                        FontSize="13"
                        FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
                        Margin="0,1,10,1" />
-
-            <TextBlock Text="{Binding SelectedRectWidth}"
-                       FontSize="13"
-                       FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
-                       Margin="0,1,4,1" />
-            <TextBlock Text="{Binding SelectedRectHeight}"
-                       FontSize="13"
-                       FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
-                       Margin="0,1,4,1" />
         </StackPanel>
 
         <Canvas
@@ -64,30 +55,23 @@
                             Stretch="None" />
             </Canvas.Background>
             <i:Interaction.Behaviors>
-                <b:RectangleSelectionBehavior
-                    InitialMouseXPos="{Binding SelectedRectXPosition, Mode=OneWayToSource}"
-                    InitialMouseYPos="{Binding SelectedRectYPosition, Mode=OneWayToSource}"
-                    SelectedRectWidth="{Binding SelectedRectWidth, Mode=OneWayToSource}"
-                    SelectedRectHeight="{Binding SelectedRectHeight, Mode=OneWayToSource}"
-                    InitialMouseXPosScreenCoords="{Binding SelectedRectXPositionScreenCoords, Mode=OneWayToSource}"
-                    InitialMouseYPosScreenCoords="{Binding SelectedRectYPositionScreenCoords, Mode=OneWayToSource}"
-                    SelectedRectWidthScreenCoords="{Binding SelectedRectWidthScreenCoords, Mode=OneWayToSource}"
-                    SelectedRectHeightScreenCoords="{Binding SelectedRectHeightScreenCoords, Mode=OneWayToSource}" />
+                <b:RectangleSelectionBehavior SelectedRectangle="{Binding CustomSelectedRectangle, Mode=OneWayToSource}" />
             </i:Interaction.Behaviors>
 
-            <Rectangle Canvas.Top="{Binding SelectedRectYPosition}"
-                       Canvas.Left="{Binding SelectedRectXPosition}"
-                       Width="{Binding SelectedRectWidth}"
-                       Height="{Binding SelectedRectHeight}"
-                       Fill="Transparent"
+            <Rectangle
+                Canvas.Top="{Binding CustomSelectedRectangle.Y}"
+                Canvas.Left="{Binding CustomSelectedRectangle.X}"
+                Width="{Binding CustomSelectedRectangle.Width}"
+                Height="{Binding CustomSelectedRectangle.Height}"
+                Fill="Transparent"
                        Stroke="White"
                        StrokeThickness="1.2"
                        SnapsToDevicePixels="True" />
             <Rectangle
-                Canvas.Top="{Binding SelectedRectYPosition}"
-                Canvas.Left="{Binding SelectedRectXPosition}"
-                Width="{Binding SelectedRectWidth}"
-                Height="{Binding SelectedRectHeight}"
+                Canvas.Top="{Binding CustomSelectedRectangle.Y}"
+                Canvas.Left="{Binding CustomSelectedRectangle.X}"
+                Width="{Binding CustomSelectedRectangle.Width}"
+                Height="{Binding CustomSelectedRectangle.Height}"
                 Fill="#25000000"
                 Stroke="Black"
                 StrokeThickness="1.2"
