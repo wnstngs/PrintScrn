@@ -83,8 +83,7 @@
 
             <Button
                 Width="70"
-                Height="40"
-                Margin="4, 0"
+                Height="50"
                 Content="Options"
                 FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
                 FontSize="14"
@@ -97,12 +96,11 @@
 
             <Button
                 Width="70"
-                Height="40"
-                Margin="4, 0"
+                Height="50"
                 Content="{Binding CaptureOrRecordButtonLabel}"
                 FontSize="14"
                 FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
-                Style="{StaticResource ModernUiButton}" />
+                Style="{StaticResource ModernUiButtonRoundedTrBr}" />
         </StackPanel>
     </Border>
 </UserControl>

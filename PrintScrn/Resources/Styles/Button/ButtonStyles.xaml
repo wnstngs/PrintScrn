@@ -7,7 +7,7 @@
                 <ControlTemplate TargetType="Button">
                     <Border
                         x:Name="Button_RootLayout"
-                        CornerRadius="4"
+                        CornerRadius="{TemplateBinding Border.CornerRadius}"
                         BorderThickness="0"
                         Width="{TemplateBinding Width}"
                         Height="{TemplateBinding Height}"
@@ -65,6 +65,12 @@
                 </Setter>
             </Style>
         </Style.Resources>
+    </Style>
+
+    <Style x:Key="ModernUiButtonRoundedTrBr"
+           BasedOn="{StaticResource ModernUiButton}"
+           TargetType="{x:Type Button}" >
+        <Setter Property="Border.CornerRadius" Value="0, 10, 10, 0" />
     </Style>
 
     <Style x:Key="ModernUiRoundSmallButton"
