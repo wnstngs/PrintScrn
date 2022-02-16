@@ -2,6 +2,7 @@
 using PrintScrn.ViewModels;
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using PrintScrn.Infrastructure.Extensions;
 using PrintScrn.Models;
@@ -127,11 +128,11 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         AssociatedObject.PreviewMouseDown -= OnMouseDown;
 
         var currentPos = e.GetPosition(AssociatedObject);
-        var delta = currentPos - _initialMousePos;
 
-        // TODO: Looks like with '+ 1' we get correct values, but need to double-check.
-        SelectedRectangle.Width = Math.Round(delta.X + 1);
-        SelectedRectangle.Height = Math.Round(delta.Y + 1);
+        SelectedRectangle.X = Math.Min(currentPos.X, _initialMousePos.X);
+        SelectedRectangle.Y = Math.Min(currentPos.Y, _initialMousePos.Y);
+        SelectedRectangle.Width = Math.Max(currentPos.X, _initialMousePos.X) - Math.Min(currentPos.X, _initialMousePos.X);
+        SelectedRectangle.Height = Math.Max(currentPos.Y, _initialMousePos.Y) - Math.Min(currentPos.Y, _initialMousePos.Y);
 
         // Force redraw
         AssociatedObject.InvalidateVisual();
