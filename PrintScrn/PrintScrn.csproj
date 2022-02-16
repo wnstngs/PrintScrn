@@ -13,26 +13,6 @@
 
   <ItemGroup>
     <None Remove="Resources\Assets\ScreenshotAppIcon.ico" />
-    <None Remove="Resources\Assets\Texture_Steel_1.jpg" />
-    <None Remove="Resources\Assets\Texture_Steel_2.jpg" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-Black.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-BlackItalic.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-Bold.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-BoldItalic.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-Heavy.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-HeavyItalic.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-Light.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-LightItalic.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-Medium.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-MediumItalic.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-Regular.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-RegularItalic.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-Semibold.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-SemiboldItalic.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-Thin.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-ThinItalic.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-Ultralight.otf" />
-    <None Remove="Resources\Fonts\SFPro\SF-Pro-Display-UltralightItalic.otf" />
     <None Remove="Resources\Fonts\SFPro\SF-Pro-Text-Bold.otf" />
     <None Remove="Resources\Fonts\SFPro\SF-Pro-Text-BoldItalic.otf" />
     <None Remove="Resources\Fonts\SFPro\SF-Pro-Text-Heavy.otf" />
@@ -45,7 +25,6 @@
     <None Remove="Resources\Fonts\SFPro\SF-Pro-Text-RegularItalic.otf" />
     <None Remove="Resources\Fonts\SFPro\SF-Pro-Text-Semibold.otf" />
     <None Remove="Resources\Fonts\SFPro\SF-Pro-Text-SemiboldItalic.otf" />
-    <None Remove="Resources\Fonts\SFPro\SFUIText-Regular.otf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,26 +38,6 @@
 
   <ItemGroup>
     <Resource Include="Resources\Assets\ScreenshotAppIcon.ico" />
-    <Resource Include="Resources\Assets\Texture_Steel_1.jpg" />
-    <Resource Include="Resources\Assets\Texture_Steel_2.jpg" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-Black.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-BlackItalic.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-Bold.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-BoldItalic.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-Heavy.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-HeavyItalic.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-Light.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-LightItalic.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-Medium.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-MediumItalic.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-Regular.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-RegularItalic.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-Semibold.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-SemiboldItalic.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-Thin.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-ThinItalic.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-Ultralight.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SF-Pro-Display-UltralightItalic.otf" />
     <Resource Include="Resources\Fonts\SFPro\SF-Pro-Text-Bold.otf" />
     <Resource Include="Resources\Fonts\SFPro\SF-Pro-Text-BoldItalic.otf" />
     <Resource Include="Resources\Fonts\SFPro\SF-Pro-Text-Heavy.otf" />
@@ -91,7 +50,6 @@
     <Resource Include="Resources\Fonts\SFPro\SF-Pro-Text-RegularItalic.otf" />
     <Resource Include="Resources\Fonts\SFPro\SF-Pro-Text-Semibold.otf" />
     <Resource Include="Resources\Fonts\SFPro\SF-Pro-Text-SemiboldItalic.otf" />
-    <Resource Include="Resources\Fonts\SFPro\SFUIText-Regular.otf" />
   </ItemGroup>
 
 </Project>

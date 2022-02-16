@@ -34,6 +34,11 @@
                        FontWeight="Bold"
                        FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
                        Margin="0,1,4,1" />
+            <TextBlock Text="|"
+                       FontSize="13"
+                       FontWeight="Bold"
+                       FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
+                       Margin="0,1,4,1" />
             <TextBlock Text="{Binding CustomSelectedRectangleScreenCoordinates.Width}"
                        FontSize="13"
                        FontWeight="Bold"
@@ -47,7 +52,6 @@
         </StackPanel>
 
         <Canvas
-            x:Name="RootScreenshotCanvas"
             Grid.Row="0"
             Grid.Column="0"
             VerticalAlignment="Stretch"
@@ -88,13 +92,14 @@
                     <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                         <BeginStoryboard>
                             <Storyboard>
-                                <!-- `To` is = to `StrokeDashArray` * 2 -->
+                                <!-- `To` should be equal to `StrokeDashArray` * 2 -->
                                 <DoubleAnimation
                                     From="0"
                                     To="12"
                                     By="1"
                                     RepeatBehavior="Forever"
                                     SpeedRatio="0.8"
+                                    DesiredFrameRate="10"
                                     Storyboard.TargetProperty="StrokeDashOffset" />
                             </Storyboard>
                         </BeginStoryboard>
