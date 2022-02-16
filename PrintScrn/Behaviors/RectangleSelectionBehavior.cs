@@ -2,7 +2,6 @@
 using PrintScrn.ViewModels;
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using PrintScrn.Infrastructure.Extensions;
 using PrintScrn.Models;
@@ -17,25 +16,48 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
 {
     /// <summary>
     /// Mouse position when <see cref="UIElement.PreviewMouseDown"/> event occured.
-    /// (i. e. coordinates where the user clicked first time).
+    /// (i. e. coordinates where the user clicked first time). Relative to the AssociatedObject.
     /// </summary>
-    private Point _initialMousePos;
+    private Point _initialMouseCanvasPosition;
+
+    /// <summary>
+    /// Mouse position when <see cref="UIElement.PreviewMouseDown"/> event occured.
+    /// (i. e. coordinates where the user clicked first time). Screen coordinates.
+    /// </summary>
+    private Point _initialMouseScreenPosition;
 
     #region Properties
 
-    #region SelectedRectangleCaptureArea
+    #region SelectedRectangleCanvasPosition
 
-    public static readonly DependencyProperty SelectedRectangleProperty = DependencyProperty.Register(
-        nameof(SelectedRectangle),
+    public static readonly DependencyProperty SelectedRectangleCanvasPositionProperty = DependencyProperty.Register(
+        nameof(SelectedRectangleCanvasPosition),
         typeof(RectangleCaptureArea),
         typeof(RectangleSelectionBehavior),
         new(default(RectangleCaptureArea))
     );
 
-    public RectangleCaptureArea SelectedRectangle
+    public RectangleCaptureArea SelectedRectangleCanvasPosition
     {
-        get => (RectangleCaptureArea) GetValue(SelectedRectangleProperty);
-        set => SetValue(SelectedRectangleProperty, value);
+        get => (RectangleCaptureArea) GetValue(SelectedRectangleCanvasPositionProperty);
+        set => SetValue(SelectedRectangleCanvasPositionProperty, value);
+    }
+
+    #endregion
+
+    #region SelectedRectangleScreenPosition
+
+    public static readonly DependencyProperty SelectedRectangleScreenPositionProperty = DependencyProperty.Register(
+        nameof(SelectedRectangleScreenPosition),
+        typeof(RectangleCaptureArea),
+        typeof(RectangleSelectionBehavior),
+        new(default(RectangleCaptureArea))
+    );
+
+    public RectangleCaptureArea SelectedRectangleScreenPosition
+    {
+        get => (RectangleCaptureArea) GetValue(SelectedRectangleScreenPositionProperty);
+        set => SetValue(SelectedRectangleScreenPositionProperty, value);
     }
 
     #endregion
@@ -48,7 +70,8 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
     /// </summary>
     protected override void OnAttached()
     {
-        SelectedRectangle = new();
+        SelectedRectangleCanvasPosition = new();
+        SelectedRectangleScreenPosition = new();
         AssociatedObject.PreviewMouseDown += OnMouseDown;
     }
 
@@ -84,13 +107,17 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
 
         ResetSelectedRectangle();
 
-        _initialMousePos = e.GetPosition(AssociatedObject);
+        _initialMouseCanvasPosition = e.GetPosition(AssociatedObject);
+        _initialMouseScreenPosition = AssociatedObject.PointToScreen(_initialMouseCanvasPosition);
+
+        SelectedRectangleCanvasPosition.X = _initialMouseCanvasPosition.X;
+        SelectedRectangleCanvasPosition.Y = _initialMouseCanvasPosition.Y;
+
+        SelectedRectangleScreenPosition.X = _initialMouseScreenPosition.X;
+        SelectedRectangleScreenPosition.Y = _initialMouseScreenPosition.Y;
 
         AssociatedObject.MouseMove += OnMouseMove;
         AssociatedObject.MouseUp += OnMouseUp;
-
-        SelectedRectangle.X = _initialMousePos.X;
-        SelectedRectangle.Y = _initialMousePos.Y;
     }
 
     /// <summary>
@@ -127,14 +154,30 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
 
         AssociatedObject.PreviewMouseDown -= OnMouseDown;
 
-        var currentPos = e.GetPosition(AssociatedObject);
+        Point currentPos = e.GetPosition(AssociatedObject);
+        Point currentPosScreenCoordinates = AssociatedObject.PointToScreen(currentPos);
 
-        SelectedRectangle.X = Math.Min(currentPos.X, _initialMousePos.X);
-        SelectedRectangle.Y = Math.Min(currentPos.Y, _initialMousePos.Y);
-        SelectedRectangle.Width = Math.Max(currentPos.X, _initialMousePos.X) - Math.Min(currentPos.X, _initialMousePos.X);
-        SelectedRectangle.Height = Math.Max(currentPos.Y, _initialMousePos.Y) - Math.Min(currentPos.Y, _initialMousePos.Y);
+        // Update position of the selected rectangle.
+        SelectedRectangleCanvasPosition.X = Math.Min(currentPos.X, _initialMouseCanvasPosition.X);
+        SelectedRectangleCanvasPosition.Y = Math.Min(currentPos.Y, _initialMouseCanvasPosition.Y);
+        SelectedRectangleCanvasPosition.Width =
+            Math.Max(currentPos.X, _initialMouseCanvasPosition.X) - Math.Min(currentPos.X, _initialMouseCanvasPosition.X) + 1;
+        SelectedRectangleCanvasPosition.Height =
+            Math.Max(currentPos.Y, _initialMouseCanvasPosition.Y) - Math.Min(currentPos.Y, _initialMouseCanvasPosition.Y) + 1;
 
-        // Force redraw
+        // Update position of the selected rectangle in screen coordinates.
+        SelectedRectangleScreenPosition.X =
+            Math.Min(currentPosScreenCoordinates.X, _initialMouseScreenPosition.X);
+        SelectedRectangleScreenPosition.Y =
+            Math.Min(currentPosScreenCoordinates.Y, _initialMouseScreenPosition.Y);
+        SelectedRectangleScreenPosition.Width =
+            Math.Max(currentPosScreenCoordinates.X, _initialMouseScreenPosition.X) -
+            Math.Min(currentPosScreenCoordinates.X, _initialMouseScreenPosition.X) + 1;
+        SelectedRectangleScreenPosition.Height =
+            Math.Max(currentPosScreenCoordinates.Y, _initialMouseScreenPosition.Y) -
+            Math.Min(currentPosScreenCoordinates.Y, _initialMouseScreenPosition.Y) + 1;
+
+        // Force redraw.
         AssociatedObject.InvalidateVisual();
     }
 
@@ -143,9 +186,9 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
     /// </summary>
     private void ResetSelectedRectangle()
     {
-        SelectedRectangle.X = 0;
-        SelectedRectangle.Y = 0;
-        SelectedRectangle.Width = 0;
-        SelectedRectangle.Height = 0;
+        SelectedRectangleCanvasPosition.X = 0;
+        SelectedRectangleCanvasPosition.Y = 0;
+        SelectedRectangleCanvasPosition.Width = 0;
+        SelectedRectangleCanvasPosition.Height = 0;
     }
 }

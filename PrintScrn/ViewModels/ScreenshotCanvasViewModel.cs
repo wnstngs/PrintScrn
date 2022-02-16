@@ -60,6 +60,18 @@ public class ScreenshotCanvasViewModel : Bindable
 
     #endregion
 
+    #region CustomSelectedRectangleScreenCoordinates
+
+    private RectangleCaptureArea? _customSelectedRectangleScreenCoordinates;
+
+    public RectangleCaptureArea? CustomSelectedRectangleScreenCoordinates
+    {
+        get => _customSelectedRectangleScreenCoordinates;
+        set => Set(ref _customSelectedRectangleScreenCoordinates, value);
+    }
+
+    #endregion
+
     #endregion
 
     #region Commands

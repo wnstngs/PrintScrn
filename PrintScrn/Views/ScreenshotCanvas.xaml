@@ -24,20 +24,24 @@
                     IsHitTestVisible="False"
                     ZIndex="9999999"
                     Orientation="Horizontal">
-            <TextBlock Text="{Binding CustomSelectedRectangle.X}"
+            <TextBlock Text="{Binding CustomSelectedRectangleScreenCoordinates.X}"
                        FontSize="13"
+                       FontWeight="Bold"
                        FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
-                       Margin="4,1,4,1"/>
-            <TextBlock Text="{Binding CustomSelectedRectangle.Y}"
+                       Margin="4,1,4,1" />
+            <TextBlock Text="{Binding CustomSelectedRectangleScreenCoordinates.Y}"
                        FontSize="13"
-                       FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
-                       Margin="0,1,4,1" />
-            <TextBlock Text="{Binding CustomSelectedRectangle.Width}"
-                       FontSize="13"
+                       FontWeight="Bold"
                        FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
                        Margin="0,1,4,1" />
-            <TextBlock Text="{Binding CustomSelectedRectangle.Height}"
+            <TextBlock Text="{Binding CustomSelectedRectangleScreenCoordinates.Width}"
                        FontSize="13"
+                       FontWeight="Bold"
+                       FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
+                       Margin="0,1,4,1" />
+            <TextBlock Text="{Binding CustomSelectedRectangleScreenCoordinates.Height}"
+                       FontSize="13"
+                       FontWeight="Bold"
                        FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text"
                        Margin="0,1,10,1" />
         </StackPanel>
@@ -55,7 +59,9 @@
                             Stretch="None" />
             </Canvas.Background>
             <i:Interaction.Behaviors>
-                <b:RectangleSelectionBehavior SelectedRectangle="{Binding CustomSelectedRectangle, Mode=OneWayToSource}" />
+                <b:RectangleSelectionBehavior 
+                    SelectedRectangleCanvasPosition="{Binding CustomSelectedRectangle, Mode=OneWayToSource}"
+                    SelectedRectangleScreenPosition="{Binding CustomSelectedRectangleScreenCoordinates, Mode=OneWayToSource}" />
             </i:Interaction.Behaviors>
 
             <Rectangle
