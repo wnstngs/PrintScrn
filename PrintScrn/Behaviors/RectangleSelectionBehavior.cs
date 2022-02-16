@@ -108,6 +108,8 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
             // Show a toolbar
             toolbarViewModel.ToolbarVisibility = Visibility.Visible;
         }
+
+        AssociatedObject.PreviewMouseDown += OnMouseDown;
     }
 
     /// <summary>
@@ -121,6 +123,8 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         {
             return;
         }
+
+        AssociatedObject.PreviewMouseDown -= OnMouseDown;
 
         var currentPos = e.GetPosition(AssociatedObject);
         var delta = currentPos - _initialMousePos;
