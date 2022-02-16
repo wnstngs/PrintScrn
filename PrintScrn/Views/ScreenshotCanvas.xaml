@@ -74,9 +74,10 @@
                 Width="{Binding CustomSelectedRectangle.Width}"
                 Height="{Binding CustomSelectedRectangle.Height}"
                 Fill="Transparent"
-                       Stroke="White"
-                       StrokeThickness="1.2"
-                       SnapsToDevicePixels="True" />
+                Stroke="White"
+                StrokeThickness="1.2"
+                SnapsToDevicePixels="True">
+            </Rectangle>
             <Rectangle
                 Canvas.Top="{Binding CustomSelectedRectangle.Y}"
                 Canvas.Left="{Binding CustomSelectedRectangle.X}"
@@ -88,6 +89,9 @@
                 StrokeDashArray="6"
                 StrokeDashCap="Round"
                 SnapsToDevicePixels="True">
+                <i:Interaction.Behaviors>
+                    <b:MoveAndResizeRectangleBehavior />
+                </i:Interaction.Behaviors>
                 <Rectangle.Triggers>
                     <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                         <BeginStoryboard>

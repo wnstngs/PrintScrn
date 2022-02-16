@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xaml.Behaviors;
 using PrintScrn.ViewModels;
 using System;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Input;
 using PrintScrn.Infrastructure.Extensions;
@@ -98,6 +99,28 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
             return;
         }
 
+        _initialMouseCanvasPosition = e.GetPosition(AssociatedObject);
+        _initialMouseScreenPosition = AssociatedObject.PointToScreen(_initialMouseCanvasPosition);
+
+        // Check if user clicks inside a rectangle.
+        // We shift responsibility to the MoveAndResizeRectangleBehavior.
+        if (
+            new Rectangle(
+                (int) SelectedRectangleCanvasPosition.X,
+                (int) SelectedRectangleCanvasPosition.Y,
+                (int) SelectedRectangleCanvasPosition.Width,
+                (int) SelectedRectangleCanvasPosition.Height
+            ).Contains(
+                new System.Drawing.Point(
+                    (int) _initialMouseCanvasPosition.X,
+                    (int) _initialMouseCanvasPosition.Y
+                )
+            )
+        )
+        {
+            return;
+        }
+
         var toolbarViewModel = ViewModelsExtension.FindViewModel<ToolbarViewModel>();
         if (toolbarViewModel != null)
         {
@@ -106,9 +129,6 @@ public class RectangleSelectionBehavior : Behavior<UIElement>
         }
 
         ResetSelectedRectangle();
-
-        _initialMouseCanvasPosition = e.GetPosition(AssociatedObject);
-        _initialMouseScreenPosition = AssociatedObject.PointToScreen(_initialMouseCanvasPosition);
 
         SelectedRectangleCanvasPosition.X = _initialMouseCanvasPosition.X;
         SelectedRectangleCanvasPosition.Y = _initialMouseCanvasPosition.Y;

@@ -154,7 +154,6 @@ public class ScreenshotCanvasViewModel : Bindable
             var croppedBitmapSource = croppedBitmap.ToBitmapSource();
             if (croppedBitmapSource != null)
             {
-                croppedBitmap?.Save("screenshot.png", ImageFormat.Png);
                 Clipboard.SetImage(croppedBitmapSource);
                 Application.Current.Shutdown(0);
             }
