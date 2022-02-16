@@ -95,6 +95,7 @@
                 Stroke="{StaticResource ModernUi_LightTheme_DarkGrayAccentColor}" />
 
             <Button
+                Command="{Binding DelegateCaptureCustomRectangle}"
                 Width="70"
                 Height="50"
                 Content="{Binding CaptureOrRecordButtonLabel}"

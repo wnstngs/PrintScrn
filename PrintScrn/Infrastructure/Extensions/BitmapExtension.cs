@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using PrintScrn.Models;
 
 namespace PrintScrn.Infrastructure.Extensions;
 
@@ -84,18 +85,20 @@ public static class BitmapExtension
         return bitmapSource;
     }
 
-    public static Bitmap? Crop(this Bitmap? bmp, Rectangle rect)
+    public static Bitmap? Crop(this Bitmap? bmp, RectangleCaptureArea rectangle)
     {
         if (
             bmp != null &&
-            rect.X >= 0 &&
-            rect.Y >= 0 &&
-            rect.Width > 0 &&
-            rect.Height > 0 &&
-            new Rectangle(0, 0, bmp.Width, bmp.Height).Contains(rect)
+            rectangle.X >= 0 &&
+            rectangle.Y >= 0 &&
+            rectangle.Width > 0 &&
+            rectangle.Height > 0
         )
         {
-            return bmp.Clone(rect, bmp.PixelFormat);
+            return bmp.Clone(
+                new Rectangle((int) rectangle.X, (int) rectangle.Y, (int) rectangle.Width, (int) rectangle.Height),
+                bmp.PixelFormat
+            );
         }
 
         return null;

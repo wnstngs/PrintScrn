@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Drawing.Imaging;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using PrintScrn.Infrastructure;
@@ -147,24 +148,25 @@ public class ScreenshotCanvasViewModel : Bindable
             return;
         }
 
-        /* TODO
-        if (_customRectangleScreenshot != null)
+        if (CustomSelectedRectangleScreenCoordinates != null)
         {
-            _customRectangleScreenshot.BitmapSource = _customRectangleScreenshot.Bitmap.ToBitmapSource();
-            if (_customRectangleScreenshot?.BitmapSource == null)
+            var croppedBitmap = _fullscreenScreenshot?.Bitmap.Crop(CustomSelectedRectangleScreenCoordinates);
+            var croppedBitmapSource = croppedBitmap.ToBitmapSource();
+            if (croppedBitmapSource != null)
             {
-                FileLogger.LogError("BitmapSource is null.");
-                return;
+                croppedBitmap?.Save("screenshot.png", ImageFormat.Png);
+                Clipboard.SetImage(croppedBitmapSource);
+                Application.Current.Shutdown(0);
             }
-            Clipboard.SetImage(_customRectangleScreenshot.BitmapSource);
+            else
+            {
+                FileLogger.LogError("croppedBitmapSource is null.");
+            }
         }
         else
         {
-            FileLogger.LogError("_customRectangleScreenshot is null.");
+            FileLogger.LogError("CustomSelectedRectangleScreenCoordinates is null.");
         }
-
-        Application.Current.Shutdown(0);
-        */
     }
 
     #endregion

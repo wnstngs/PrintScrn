@@ -13,6 +13,7 @@ public class ToolbarViewModel : Bindable
         ViewModels.Instance.ViewModelsStore.Add(this);
 
         DelegateCaptureFullscreen = new RelayCommand(OnDelegateCaptureFullscreen);
+        DelegateCaptureCustomRectangle = new RelayCommand(OnDelegateCaptureCustomRectangle);
     }
 
     ~ToolbarViewModel()
@@ -82,6 +83,18 @@ public class ToolbarViewModel : Bindable
     {
         var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
         screenshotCanvasViewModel?.CaptureFullscreen.Execute(null);
+    }
+
+    #endregion
+
+    #region DelegateCaptureCustomRectangle
+
+    public ICommand DelegateCaptureCustomRectangle { get; }
+
+    private void OnDelegateCaptureCustomRectangle()
+    {
+        var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
+        screenshotCanvasViewModel?.CaptureCustomRectangle.Execute(null);
     }
 
     #endregion
