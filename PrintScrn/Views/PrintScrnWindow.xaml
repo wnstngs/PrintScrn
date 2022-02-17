@@ -33,5 +33,33 @@
 
         <v:ToolbarControl Grid.Row="0"
                           Grid.Column="0" />
+
+        <!-- <Border Grid.Row="0" -->
+        <!--         Grid.Column="0" -->
+        <!--         Visibility="{Binding ErrorMessageVisibility}" -->
+        <!--         HorizontalAlignment="Center" -->
+        <!--         BorderBrush="#FF3B30" -->
+        <!--         BorderThickness="1" -->
+        <!--         CornerRadius="6" -->
+        <!--         Background="#FFCCCC" -->
+        <!--         Margin="0, 74, 0, 0"> -->
+        <!--     <StackPanel Orientation="Horizontal"> -->
+        <!--         <TextBlock Foreground="#FF3B30" -->
+        <!--                    FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text" -->
+        <!--                    FontSize="14" -->
+        <!--                    Margin="14, 2, 3, 2"> -->
+        <!--             Oops, something went wrong! -->
+        <!--         </TextBlock> -->
+        <!--         <TextBlock Foreground="#FF3B30" -->
+        <!--                    FontFamily="pack://application:,,,/Resources/Fonts/SFPro/#SF Pro Text" -->
+        <!--                    FontSize="14" -->
+        <!--                    TextDecorations="Underline" -->
+        <!--                    Cursor="Hand" -->
+        <!--                    MouseLeftButtonUp="OpenLogs" -->
+        <!--                    Margin="3, 2, 14, 2"> -->
+        <!--             Open logs -->
+        <!--         </TextBlock> -->
+        <!--     </StackPanel> -->
+        <!-- </Border> -->
     </Grid>
 </Window>

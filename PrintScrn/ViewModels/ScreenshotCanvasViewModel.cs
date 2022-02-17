@@ -49,26 +49,26 @@ public class ScreenshotCanvasViewModel : Bindable
 
     #endregion
 
-    #region CustomSelectedRectangle
+    #region CustomRectangle
 
-    private RectangleCaptureArea? _customSelectedRectangle;
+    private RectangleCaptureArea? _customRectangle;
 
-    public RectangleCaptureArea? CustomSelectedRectangle
+    public RectangleCaptureArea? CustomRectangle
     {
-        get => _customSelectedRectangle;
-        set => Set(ref _customSelectedRectangle, value);
+        get => _customRectangle;
+        set => Set(ref _customRectangle, value);
     }
 
     #endregion
 
-    #region CustomSelectedRectangleScreenCoordinates
+    #region CustomRectangleScreenCoordinates
 
-    private RectangleCaptureArea? _customSelectedRectangleScreenCoordinates;
+    private RectangleCaptureArea? _customRectangleScreenCoordinates;
 
-    public RectangleCaptureArea? CustomSelectedRectangleScreenCoordinates
+    public RectangleCaptureArea? CustomRectangleScreenCoordinates
     {
-        get => _customSelectedRectangleScreenCoordinates;
-        set => Set(ref _customSelectedRectangleScreenCoordinates, value);
+        get => _customRectangleScreenCoordinates;
+        set => Set(ref _customRectangleScreenCoordinates, value);
     }
 
     #endregion
@@ -136,21 +136,21 @@ public class ScreenshotCanvasViewModel : Bindable
 
     private void OnCaptureCustomRectangle()
     {
-        if (CustomSelectedRectangle == null)
+        if (CustomRectangle == null)
         {
             FileLogger.LogError("CustomSelectedRectangle is null.");
             return;
         }
 
-        if (CustomSelectedRectangle.Height < MinSelectedRectSize || 
-            CustomSelectedRectangle.Width < MinSelectedRectSize)
+        if (CustomRectangle.Height < MinSelectedRectSize || 
+            CustomRectangle.Width < MinSelectedRectSize)
         {
             return;
         }
 
-        if (CustomSelectedRectangleScreenCoordinates != null)
+        if (CustomRectangleScreenCoordinates != null)
         {
-            var croppedBitmap = _fullscreenScreenshot?.Bitmap.Crop(CustomSelectedRectangleScreenCoordinates);
+            var croppedBitmap = _fullscreenScreenshot?.Bitmap.Crop(CustomRectangleScreenCoordinates);
             var croppedBitmapSource = croppedBitmap.ToBitmapSource();
             if (croppedBitmapSource != null)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using PrintScrn.Models;
@@ -88,19 +89,32 @@ public static class BitmapExtension
     public static Bitmap? Crop(this Bitmap? bmp, RectangleCaptureArea rectangle)
     {
         if (
-            bmp != null &&
-            rectangle.X >= 0 &&
-            rectangle.Y >= 0 &&
-            rectangle.Width > 0 &&
-            rectangle.Height > 0
+            bmp == null ||
+            !(rectangle.X >= 0) ||
+            !(rectangle.Y >= 0) ||
+            !(rectangle.Width > 0) ||
+            !(rectangle.Height > 0)
         )
         {
+            return null;
+        }
+
+        try
+        {
             return bmp.Clone(
-                new Rectangle((int) rectangle.X, (int) rectangle.Y, (int) rectangle.Width, (int) rectangle.Height),
+                new Rectangle(
+                    (int) rectangle.X,
+                    (int) rectangle.Y,
+                    (int) rectangle.Width,
+                    (int) rectangle.Height
+                ),
                 bmp.PixelFormat
             );
         }
-
-        return null;
+        catch (Exception e)
+        {
+            FileLogger.LogError(e.Message);
+            return null;
+        }
     }
 }

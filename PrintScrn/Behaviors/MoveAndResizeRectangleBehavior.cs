@@ -42,7 +42,7 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
 
     public RectangleCaptureArea RectangleCanvasPosition
     {
-        get => (RectangleCaptureArea)GetValue(RectangleCanvasPositionProperty);
+        get => (RectangleCaptureArea) GetValue(RectangleCanvasPositionProperty);
         set => SetValue(RectangleCanvasPositionProperty, value);
     }
 
@@ -59,7 +59,7 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
 
     public RectangleCaptureArea RectangleScreenPosition
     {
-        get => (RectangleCaptureArea)GetValue(RectangleScreenPositionProperty);
+        get => (RectangleCaptureArea) GetValue(RectangleScreenPositionProperty);
         set => SetValue(RectangleScreenPositionProperty, value);
     }
 
@@ -105,21 +105,22 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
         AssociatedObject.ReleaseMouseCapture();
     }
 
+    // TODO: https://github.com/wnstngs/PrintScrn/commit/89b460eca2055f5e0bdbd099dc4cbd054ea8e8f5#commitcomment-66839838
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
-        var screenshotCanvasViewModel = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
-        if (screenshotCanvasViewModel == null)
+        var vm = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
+        if (vm == null)
         {
             FileLogger.LogError("screenshotCanvasViewModel is null.");
             return;
         }
 
-        var currentMouseCanvasPosition = e.GetPosition(_parentCanvas);
-        var canvasPositionDelta = currentMouseCanvasPosition - _initialMouseCanvasPosition;
-        if (screenshotCanvasViewModel.CustomSelectedRectangle != null)
+        var currentCanvas = e.GetPosition(_parentCanvas);
+        var canvasDelta = currentCanvas - _initialMouseCanvasPosition;
+        if (vm.CustomRectangle != null)
         {
-            screenshotCanvasViewModel.CustomSelectedRectangle.X = canvasPositionDelta.X;
-            screenshotCanvasViewModel.CustomSelectedRectangle.Y = canvasPositionDelta.Y;
+            vm.CustomRectangle.X = canvasDelta.X;
+            vm.CustomRectangle.Y = canvasDelta.Y;
         }
         else
         {
@@ -127,17 +128,18 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
             return;
         }
 
-        var currentMouseScreenPosition = e.GetPosition(_parentCanvas);
-        var screenPositionDelta = currentMouseScreenPosition - _initialMouseScreenPosition;
-        if (screenshotCanvasViewModel.CustomSelectedRectangleScreenCoordinates != null)
+        if (vm.CustomRectangleScreenCoordinates != null)
         {
-            screenshotCanvasViewModel.CustomSelectedRectangleScreenCoordinates.X = screenPositionDelta.X;
-            screenshotCanvasViewModel.CustomSelectedRectangleScreenCoordinates.Y = screenPositionDelta.Y;
+            vm.CustomRectangleScreenCoordinates.X = AssociatedObject.PointToScreen(
+                new Point(canvasDelta.X, canvasDelta.Y)
+            ).X;
+            vm.CustomRectangleScreenCoordinates.Y = AssociatedObject.PointToScreen(
+                new Point(canvasDelta.X, canvasDelta.Y)
+            ).Y;
         }
         else
         {
             FileLogger.LogError("CustomSelectedRectangleScreenCoordinates is null.");
-            return;
         }
     }
 }

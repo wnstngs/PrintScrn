@@ -7,6 +7,8 @@ namespace PrintScrn.Infrastructure;
 
 public static class FileLogger
 {
+    private static string _path;
+
     private static StreamWriter? _writer;
 
     /// <summary>
@@ -16,9 +18,11 @@ public static class FileLogger
     /// <param name="path">The complete file path to write to. path can be a file name.</param>
     public static void Init(string path)
     {
+        _path = path;
+
         try
         {
-            File.Delete(path);
+            File.Delete(_path);
         }
         catch (Exception e)
         {
@@ -27,7 +31,7 @@ public static class FileLogger
 
         try
         {
-            _writer = new(path, append: true);
+            _writer = new(_path, append: true);
         }
         catch (Exception e)
         {
@@ -43,6 +47,18 @@ public static class FileLogger
         try
         {
             _writer?.Close();
+        }
+        catch (Exception e)
+        {
+            Trace.WriteLine($"{System.Reflection.MethodBase.GetCurrentMethod()?.Name}: {e.Message}");
+        }
+    }
+
+    public static void Reopen()
+    {
+        try
+        {
+            _writer = new(_path, append: true);
         }
         catch (Exception e)
         {
