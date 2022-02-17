@@ -1,5 +1,4 @@
-﻿using System.Drawing.Imaging;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using PrintScrn.Infrastructure;
@@ -37,7 +36,7 @@ public class ScreenshotCanvasViewModel : Bindable
 
     #region Properties
 
-    #region ScreenImageSource
+    #region ScreenshotCanvasImageSource
 
     private ImageSource? _screenshotCanvasImageSource;
 

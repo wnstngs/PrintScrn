@@ -94,8 +94,8 @@ internal class PrintScrnWindowViewModel : Bindable
         if (presentationSrc?.CompositionTarget != null)
         {
             var m = presentationSrc.CompositionTarget.TransformToDevice;
-            MonitorWidth = (int)(SystemParameters.PrimaryScreenWidth * m.M11);
-            MonitorHeight = (int)(SystemParameters.PrimaryScreenHeight * m.M22);
+            MonitorWidth = (int) (SystemParameters.PrimaryScreenWidth * m.M11);
+            MonitorHeight = (int) (SystemParameters.PrimaryScreenHeight * m.M22);
         }
         else
         {

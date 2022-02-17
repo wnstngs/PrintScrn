@@ -19,58 +19,12 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
     private Point _initialMouseCanvasPosition;
 
     /// <summary>
-    /// Mouse position when <see cref="UIElement.PreviewMouseDown"/> event occured.
-    /// (i. e. coordinates where the user clicked first time). Screen coordinates.
-    /// </summary>
-    private Point _initialMouseScreenPosition;
-
-    /// <summary>
     /// Parent of the associated rectangle.
     /// </summary>
     private Canvas? _parentCanvas;
 
-    #region Properties
-
-    #region RectangleCanvasPosition
-
-    public static readonly DependencyProperty RectangleCanvasPositionProperty = DependencyProperty.Register(
-        nameof(RectangleCanvasPosition),
-        typeof(RectangleCaptureArea),
-        typeof(MoveAndResizeRectangleBehavior),
-        new(default(RectangleCaptureArea))
-    );
-
-    public RectangleCaptureArea RectangleCanvasPosition
-    {
-        get => (RectangleCaptureArea) GetValue(RectangleCanvasPositionProperty);
-        set => SetValue(RectangleCanvasPositionProperty, value);
-    }
-
-    #endregion
-
-    #region RectangleScreenPosition
-
-    public static readonly DependencyProperty RectangleScreenPositionProperty = DependencyProperty.Register(
-        nameof(RectangleScreenPosition),
-        typeof(RectangleCaptureArea),
-        typeof(MoveAndResizeRectangleBehavior),
-        new(default(RectangleCaptureArea))
-    );
-
-    public RectangleCaptureArea RectangleScreenPosition
-    {
-        get => (RectangleCaptureArea) GetValue(RectangleScreenPositionProperty);
-        set => SetValue(RectangleScreenPositionProperty, value);
-    }
-
-    #endregion
-
-    #endregion
-
     protected override void OnAttached()
     {
-        RectangleCanvasPosition = new();
-        RectangleScreenPosition = new();
         AssociatedObject.MouseLeftButtonDown += OnButtonDown;
     }
 
@@ -78,7 +32,7 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
     {
         AssociatedObject.MouseLeftButtonDown -= OnButtonDown;
         AssociatedObject.MouseMove -= OnMouseMove;
-        AssociatedObject.MouseUp -= OnMouseUp;
+        AssociatedObject.MouseLeftButtonUp -= OnMouseUp;
     }
 
     private void OnButtonDown(object sender, MouseButtonEventArgs e)
@@ -89,12 +43,11 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
         }
 
         _initialMouseCanvasPosition = e.GetPosition(AssociatedObject);
-        _initialMouseScreenPosition = AssociatedObject.PointToScreen(_initialMouseCanvasPosition);
 
         AssociatedObject.CaptureMouse();
 
         AssociatedObject.MouseMove += OnMouseMove;
-        AssociatedObject.MouseUp += OnMouseUp;
+        AssociatedObject.MouseLeftButtonUp += OnMouseUp;
     }
 
     private void OnMouseUp(object sender, MouseButtonEventArgs e)
@@ -130,10 +83,10 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
 
         if (vm.CustomRectangleScreenCoordinates != null)
         {
-            vm.CustomRectangleScreenCoordinates.X = AssociatedObject.PointToScreen(
+            vm.CustomRectangleScreenCoordinates.X = _parentCanvas.PointToScreen(
                 new Point(canvasDelta.X, canvasDelta.Y)
             ).X;
-            vm.CustomRectangleScreenCoordinates.Y = AssociatedObject.PointToScreen(
+            vm.CustomRectangleScreenCoordinates.Y = _parentCanvas.PointToScreen(
                 new Point(canvasDelta.X, canvasDelta.Y)
             ).Y;
         }
