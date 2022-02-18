@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -7,6 +6,7 @@ using Microsoft.Xaml.Behaviors;
 using PrintScrn.Infrastructure;
 using PrintScrn.Infrastructure.Extensions;
 using PrintScrn.Infrastructure.Helpers;
+using PrintScrn.Infrastructure.Native;
 using PrintScrn.ViewModels;
 using Point = System.Windows.Point;
 
@@ -28,6 +28,8 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
     /// Parent of the associated rectangle.
     /// </summary>
     private Canvas? _parentCanvas;
+
+    private Win32Type.RECT screenBounds;
 
     /// <summary>
     /// Called after the behavior is attached to an AssociatedObject.
@@ -62,6 +64,7 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
             return;
         }
 
+        screenBounds = GraphicsCaptureHelper.GetMonitorRectFromWindow();
         _initialMouseCanvasPosition = e.GetPosition(AssociatedObject);
 
         AssociatedObject.CaptureMouse();
@@ -121,23 +124,72 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
             new Point(canvasDelta.X, canvasDelta.Y)
         );
 
-        // Check before committing the drag operation if the rectangle will be moved outside of canvas bounds.
-        if (
-            screenDelta.X < 0 ||
-            screenDelta.Y < 0 ||
-            screenDelta.X + vm.CustomRectangleScreenCoordinates.Width >
-            GraphicsCaptureHelper.GetMonitorRectFromWindow().Width ||
-            screenDelta.Y + vm.CustomRectangleScreenCoordinates.Height >
-            GraphicsCaptureHelper.GetMonitorRectFromWindow().Height
-        )
+        //
+        // Check before committing the drag operation if the rectangle will
+        // be moved outside of canvas bounds.
+        //
+
+        bool canMoveToRight = true;
+        bool canMoveToLeft = true;
+        bool canMoveToTop = true;
+        bool canMoveToBottom = true;
+
+        if (screenDelta.X < 0)
         {
-            return;
+            canMoveToRight = true;
+            canMoveToLeft = false;
         }
 
-        vm.CustomRectangle.X = canvasDelta.X;
-        vm.CustomRectangle.Y = canvasDelta.Y;
+        if (screenDelta.Y < 0)
+        {
+            canMoveToBottom = true;
+            canMoveToTop = false;
+        }
 
-        vm.CustomRectangleScreenCoordinates.X = screenDelta.X;
-        vm.CustomRectangleScreenCoordinates.Y = screenDelta.Y;
+        if (screenDelta.X + vm.CustomRectangleScreenCoordinates.Width > screenBounds.Width)
+        {
+            canMoveToRight = false;
+            canMoveToLeft = true;
+        }
+
+        if (screenDelta.Y + vm.CustomRectangleScreenCoordinates.Height > screenBounds.Height)
+        {
+            canMoveToBottom = false;
+            canMoveToTop = true;
+        }
+
+        if (vm.CustomRectangleScreenCoordinates.X < screenDelta.X)
+        {
+            if (canMoveToRight)
+            {
+                vm.CustomRectangle.X = canvasDelta.X;
+                vm.CustomRectangleScreenCoordinates.X = screenDelta.X;
+            }
+        }
+        else
+        {
+            if (canMoveToLeft)
+            {
+                vm.CustomRectangle.X = canvasDelta.X;
+                vm.CustomRectangleScreenCoordinates.X = screenDelta.X;
+            }
+        }
+
+        if (vm.CustomRectangleScreenCoordinates.Y < screenDelta.Y)
+        {
+            if (canMoveToBottom)
+            {
+                vm.CustomRectangle.Y = canvasDelta.Y;
+                vm.CustomRectangleScreenCoordinates.Y = screenDelta.Y;
+            }
+        }
+        else
+        {
+            if (canMoveToTop)
+            {
+                vm.CustomRectangle.Y = canvasDelta.Y;
+                vm.CustomRectangleScreenCoordinates.Y = screenDelta.Y;
+            }
+        }
     }
 }
