@@ -29,7 +29,15 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
     /// </summary>
     private Canvas? _parentCanvas;
 
-    private Win32Type.RECT screenBounds;
+    /// <summary>
+    /// Provides X, Y, Width and Height of the screen.
+    /// </summary>
+    private Win32Type.RECT _screenBounds;
+
+    /// <summary>
+    /// Provides access to the ScreenshotCanvasViewModel.
+    /// </summary>
+    private ScreenshotCanvasViewModel? _vm = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
 
     /// <summary>
     /// Called after the behavior is attached to an AssociatedObject.
@@ -64,7 +72,7 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
             return;
         }
 
-        screenBounds = GraphicsCaptureHelper.GetMonitorRectFromWindow();
+        _screenBounds = GraphicsCaptureHelper.GetMonitorRectFromWindow();
         _initialMouseCanvasPosition = e.GetPosition(AssociatedObject);
 
         AssociatedObject.CaptureMouse();
@@ -93,20 +101,13 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
     /// <param name="e">The event data.</param>
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
-        var vm = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
-        if (vm == null)
-        {
-            FileLogger.LogError("screenshotCanvasViewModel is null.");
-            return;
-        }
-
-        if (vm.CustomRectangle == null)
+        if (_vm!.CustomRectangle == null)
         {
             FileLogger.LogError("CustomSelectedRectangle is null.");
             return;
         }
 
-        if (vm.CustomRectangleScreenCoordinates == null)
+        if (_vm.CustomRectangleScreenCoordinates == null)
         {
             FileLogger.LogError("CustomSelectedRectangleScreenCoordinates is null.");
             return;
@@ -118,12 +119,30 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
             return;
         }
 
+        // Mouse position relative to the parent canvas.
         var currentCanvas = e.GetPosition(_parentCanvas);
-        var canvasDelta = currentCanvas - _initialMouseCanvasPosition;
-        var screenDelta = _parentCanvas.PointToScreen(
-            new Point(canvasDelta.X, canvasDelta.Y)
-        );
 
+        var canvasDelta = currentCanvas - _initialMouseCanvasPosition;
+        var screenDelta = _parentCanvas.PointToScreen(new Point(canvasDelta.X, canvasDelta.Y));
+
+        MoveRectangleIfCanBeMoved(canvasDelta.X, canvasDelta.Y, screenDelta.X, screenDelta.Y);
+    }
+
+    /// <summary>
+    /// This method verifies whether a new possible rectangle position is valid.
+    /// If so, the move is performed.  
+    /// </summary>
+    /// <param name="canvasDeltaX">New X position in canvas coordinates.</param>
+    /// <param name="canvasDeltaY">New Y position in canvas coordinates.</param>
+    /// <param name="screenDeltaX">New X position in screen coordinates.</param>
+    /// <param name="screenDeltaY">New Y position in screen coordinates.</param>
+    private void MoveRectangleIfCanBeMoved(
+        double canvasDeltaX,
+        double canvasDeltaY, 
+        double screenDeltaX,
+        double screenDeltaY
+    )
+    {
         //
         // Check before committing the drag operation if the rectangle will
         // be moved outside of canvas bounds.
@@ -134,61 +153,73 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
         bool canMoveToTop = true;
         bool canMoveToBottom = true;
 
-        if (screenDelta.X < 0)
+        // If true, a rectangle will be moved outside of screen bounds on the _left_ side
+        if (screenDeltaX < 0)
         {
+            // So we prohibit to move a rectangle to the west and definetely allow moving to the east.
             canMoveToRight = true;
             canMoveToLeft = false;
         }
 
-        if (screenDelta.Y < 0)
+        // If true, a rectangle will be moved outside of screen bounds on the _top_ side
+        if (screenDeltaY < 0)
         {
+            // So we prohibit to move a rectangle to the north and definetely allow moving to the south.
             canMoveToBottom = true;
             canMoveToTop = false;
         }
 
-        if (screenDelta.X + vm.CustomRectangleScreenCoordinates.Width > screenBounds.Width)
+        // If true, a rectangle will be moved outside of screen bounds on the _right_ side
+        if (screenDeltaX + _vm!.CustomRectangleScreenCoordinates!.Width > _screenBounds.Width)
         {
+            // So we prohibit to move a rectangle to the east and definetely allow moving to the west.
             canMoveToRight = false;
             canMoveToLeft = true;
         }
 
-        if (screenDelta.Y + vm.CustomRectangleScreenCoordinates.Height > screenBounds.Height)
+        // If true, a rectangle will be moved outside of screen bounds on the _bottom_ side
+        if (screenDeltaY + _vm.CustomRectangleScreenCoordinates.Height > _screenBounds.Height)
         {
+            // So we prohibit to move a rectangle to the south and definetely allow moving to the north.
             canMoveToBottom = false;
             canMoveToTop = true;
         }
 
-        if (vm.CustomRectangleScreenCoordinates.X < screenDelta.X)
+        // Moving a rectangle to the right
+        if (_vm.CustomRectangleScreenCoordinates.X < screenDeltaX)
         {
             if (canMoveToRight)
             {
-                vm.CustomRectangle.X = canvasDelta.X;
-                vm.CustomRectangleScreenCoordinates.X = screenDelta.X;
+                _vm.CustomRectangle!.X = canvasDeltaX;
+                _vm.CustomRectangleScreenCoordinates.X = screenDeltaX;
             }
         }
+        // Moving a rectangle to the left
         else
         {
             if (canMoveToLeft)
             {
-                vm.CustomRectangle.X = canvasDelta.X;
-                vm.CustomRectangleScreenCoordinates.X = screenDelta.X;
+                _vm.CustomRectangle!.X = canvasDeltaX;
+                _vm.CustomRectangleScreenCoordinates.X = screenDeltaX;
             }
         }
 
-        if (vm.CustomRectangleScreenCoordinates.Y < screenDelta.Y)
+        // Moving a rectangle to the bottom
+        if (_vm.CustomRectangleScreenCoordinates.Y < screenDeltaY)
         {
             if (canMoveToBottom)
             {
-                vm.CustomRectangle.Y = canvasDelta.Y;
-                vm.CustomRectangleScreenCoordinates.Y = screenDelta.Y;
+                _vm.CustomRectangle!.Y = canvasDeltaY;
+                _vm.CustomRectangleScreenCoordinates.Y = screenDeltaY;
             }
         }
+        // Moving a rectangle to the top
         else
         {
             if (canMoveToTop)
             {
-                vm.CustomRectangle.Y = canvasDelta.Y;
-                vm.CustomRectangleScreenCoordinates.Y = screenDelta.Y;
+                _vm.CustomRectangle!.Y = canvasDeltaY;
+                _vm.CustomRectangleScreenCoordinates.Y = screenDeltaY;
             }
         }
     }
