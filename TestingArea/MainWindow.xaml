@@ -8,15 +8,103 @@
         Height="450" 
         Width="800">
     <Canvas Background="White">
-        <Rectangle Canvas.Top="50"
-                   Canvas.Left="50"
-                   Width="200"
+        <!-- WidthOfResizableArea = 20 -->
+        <Rectangle Canvas.Top="100"
+                   Canvas.Left="100"
+                   Width="300"
                    Height="200"
                    Fill="Black" />
-        <Rectangle Canvas.Top="75"
-                   Canvas.Left="75"
-                   Width="150"
-                   Height="150"
-                   Fill="Red" />
+
+        <!-- Corners -->
+
+        <!-- Top-Left: 
+        X = RectangleX - WidthOfResizableArea
+        Y = RectangleY - WidthOfResizableArea
+        Width = WidthOfResizableArea * 2
+        Height = WidthOfResizableArea * 2 -->
+        <Rectangle Fill="Red"
+                   Canvas.Left="80" 
+                   Canvas.Top="80"
+                   Width="40"
+                   Height="40"/>
+
+        <!-- Bottom-Right: 
+        X = RectangleWidth + WidthOfResizableArea + RectangleX
+        Y = RectangleHeight + WidthOfResizableArea + RectangleY
+        Width = WidthOfResizableArea * 2
+        Height = WidthOfResizableArea * 2 -->
+        <Rectangle Fill="Blue"
+                   Canvas.Left="380"
+                   Canvas.Top="280"
+                   Width="40"
+                   Height="40" />
+
+        <!-- Top-Right: 
+        X = RectangleX - WidthOfResizableArea
+        Y = RectangleHeight - WidthOfResizableArea + RectangleY
+        Width = WidthOfResizableArea * 2
+        Height = WidthOfResizableArea * 2 -->
+        <Rectangle Fill="Green"
+                   Canvas.Left="80"
+                   Canvas.Top="280"
+                   Width="40"
+                   Height="40" />
+
+        <!-- Bottom-Left: 
+        X = RectangleWidth - WidthOfResizableArea + RectangleX
+        Y = RectangleY - WidthOfResizableArea
+        Width = WidthOfResizableArea * 2
+        Height = WidthOfResizableArea * 2 -->
+        <Rectangle Fill="Yellow"
+                   Canvas.Left="380"
+                   Canvas.Top="80"
+                   Width="40"
+                   Height="40" />
+
+        <!-- Edges -->
+
+        <!-- Top: 
+        X = RectX + WidthOfResizableArea
+        Y = RectY - WidthOfResizableArea
+        Width = RectangleWidth - WidthOfResizableArea * 2
+        Height = WidthOfResizableArea * 2 -->
+        <Rectangle Fill="Purple"
+                   Canvas.Left="120"
+                   Canvas.Top="80"
+                   Width="260"
+                   Height="40" />
+
+        <!-- Bottom: 
+        X = RectX + WidthOfResizableArea
+        Y = RectHeight - WidthOfResizableArea + RectY
+        Width = RectangleWidth - WidthOfResizableArea * 2
+        Height = WidthOfResizableArea * 2 -->
+        <Rectangle Fill="Aqua"
+                   Canvas.Left="120"
+                   Canvas.Top="280"
+                   Width="260"
+                   Height="40" />
+
+        <!-- Left: 
+        X = RectY - WidthOfResizableArea
+        Y = RectY + WidthOfResizableArea
+        Width = WidthOfResizableArea * 2
+        Height = RectHeight - WidthOfResizableArea * 2 -->
+        <Rectangle Fill="Coral"
+                   Canvas.Left="80"
+                   Canvas.Top="120"
+                   Width="40"
+                   Height="160" />
+
+        <!-- Right: 
+        X = RectWidth - WidthOfResizableArea + RectX
+        Y = RectY + WidthOfResizableArea
+        Width = WidthOfResizableArea * 2
+        Height = RectHeight - WidthOfResizableArea * 2 -->
+        <Rectangle Fill="DarkSeaGreen"
+                   Canvas.Left="380"
+                   Canvas.Top="120"
+                   Width="40"
+                   Height="160" />
     </Canvas>
 </Window>
