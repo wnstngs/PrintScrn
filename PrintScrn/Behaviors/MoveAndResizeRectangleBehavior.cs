@@ -1,15 +1,21 @@
-﻿using System.Windows;
+﻿using System.Drawing;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Xaml.Behaviors;
 using PrintScrn.Infrastructure;
 using PrintScrn.Infrastructure.Extensions;
-using PrintScrn.Models;
+using PrintScrn.Infrastructure.Helpers;
 using PrintScrn.ViewModels;
+using Point = System.Windows.Point;
 
 namespace PrintScrn.Behaviors;
 
+/// <summary>
+/// The RectangleSelectionBehavior is responsible for dragging and resizing of a rectangle
+/// on the ScreenshotCanvas.
+/// </summary>
 public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
 {
     /// <summary>
@@ -23,20 +29,34 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
     /// </summary>
     private Canvas? _parentCanvas;
 
+    /// <summary>
+    /// Called after the behavior is attached to an AssociatedObject.
+    /// Assign PreviewMouseDown event handler.
+    /// </summary>
     protected override void OnAttached()
     {
         AssociatedObject.MouseLeftButtonDown += OnButtonDown;
     }
 
+    /// <summary>
+    /// Called when the behavior is being detached from its AssociatedObject, but before it has actually occurred.
+    /// Unregisters all event handlers.
+    /// </summary>
     protected override void OnDetaching()
     {
         AssociatedObject.MouseLeftButtonDown -= OnButtonDown;
-        AssociatedObject.MouseMove -= OnMouseMove;
+        AssociatedObject.PreviewMouseMove -= OnMouseMove;
         AssociatedObject.MouseLeftButtonUp -= OnMouseUp;
     }
 
+    /// <summary>
+    /// <see cref="UIElement.MouseLeftButtonDown"/> event handler.
+    /// </summary>
+    /// <param name="sender">The object where the event handler is attached.</param>
+    /// <param name="e">The event data.</param>
     private void OnButtonDown(object sender, MouseButtonEventArgs e)
     {
+        // Find parent (ScreenshotCanvas) of the AssociatedObject.
         if ((_parentCanvas ??= VisualTreeHelper.GetParent(AssociatedObject) as Canvas) is null)
         {
             return;
@@ -46,19 +66,28 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
 
         AssociatedObject.CaptureMouse();
 
-        AssociatedObject.MouseMove += OnMouseMove;
+        AssociatedObject.PreviewMouseMove += OnMouseMove;
         AssociatedObject.MouseLeftButtonUp += OnMouseUp;
     }
 
+    /// <summary>
+    /// <see cref="UIElement.MouseLeftButtonUp"/> event handler.
+    /// </summary>
+    /// <param name="sender">The object where the event handler is attached.</param>
+    /// <param name="e">The event data.</param>
     private void OnMouseUp(object sender, MouseButtonEventArgs e)
     {
-        AssociatedObject.MouseMove -= OnMouseMove;
-        AssociatedObject.MouseUp -= OnMouseUp;
+        AssociatedObject.PreviewMouseMove -= OnMouseMove;
+        AssociatedObject.MouseLeftButtonUp -= OnMouseUp;
 
         AssociatedObject.ReleaseMouseCapture();
     }
 
-    // TODO: https://github.com/wnstngs/PrintScrn/commit/89b460eca2055f5e0bdbd099dc4cbd054ea8e8f5#commitcomment-66839838
+    /// <summary>
+    /// <see cref="UIElement.PreviewMouseMove"/> event handler.
+    /// </summary>
+    /// <param name="sender">The object where the event handler is attached.</param>
+    /// <param name="e">The event data.</param>
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
         var vm = ViewModelsExtension.FindViewModel<ScreenshotCanvasViewModel>();
@@ -68,31 +97,47 @@ public class MoveAndResizeRectangleBehavior : Behavior<UIElement>
             return;
         }
 
-        var currentCanvas = e.GetPosition(_parentCanvas);
-        var canvasDelta = currentCanvas - _initialMouseCanvasPosition;
-        if (vm.CustomRectangle != null)
-        {
-            vm.CustomRectangle.X = canvasDelta.X;
-            vm.CustomRectangle.Y = canvasDelta.Y;
-        }
-        else
+        if (vm.CustomRectangle == null)
         {
             FileLogger.LogError("CustomSelectedRectangle is null.");
             return;
         }
 
-        if (vm.CustomRectangleScreenCoordinates != null)
-        {
-            vm.CustomRectangleScreenCoordinates.X = _parentCanvas.PointToScreen(
-                new Point(canvasDelta.X, canvasDelta.Y)
-            ).X;
-            vm.CustomRectangleScreenCoordinates.Y = _parentCanvas.PointToScreen(
-                new Point(canvasDelta.X, canvasDelta.Y)
-            ).Y;
-        }
-        else
+        if (vm.CustomRectangleScreenCoordinates == null)
         {
             FileLogger.LogError("CustomSelectedRectangleScreenCoordinates is null.");
+            return;
         }
+
+        if (_parentCanvas == null)
+        {
+            FileLogger.LogError("_parentCanvas is null");
+            return;
+        }
+
+        var currentCanvas = e.GetPosition(_parentCanvas);
+        var canvasDelta = currentCanvas - _initialMouseCanvasPosition;
+        var screenDelta = _parentCanvas.PointToScreen(
+            new Point(canvasDelta.X, canvasDelta.Y)
+        );
+
+        // Check before committing the drag operation if the rectangle will be moved outside of canvas bounds.
+        if (
+            screenDelta.X < 0 ||
+            screenDelta.Y < 0 ||
+            screenDelta.X + vm.CustomRectangleScreenCoordinates.Width >
+            GraphicsCaptureHelper.GetMonitorRectFromWindow().Width ||
+            screenDelta.Y + vm.CustomRectangleScreenCoordinates.Height >
+            GraphicsCaptureHelper.GetMonitorRectFromWindow().Height
+        )
+        {
+            return;
+        }
+
+        vm.CustomRectangle.X = canvasDelta.X;
+        vm.CustomRectangle.Y = canvasDelta.Y;
+
+        vm.CustomRectangleScreenCoordinates.X = screenDelta.X;
+        vm.CustomRectangleScreenCoordinates.Y = screenDelta.Y;
     }
 }
