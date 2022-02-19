@@ -92,7 +92,7 @@
                 StrokeDashCap="Round"
                 SnapsToDevicePixels="True">
                 <i:Interaction.Behaviors>
-                    <b:MoveAndResizeRectangleBehavior />
+                    <b:DragAndResizeRectangleBehavior />
                 </i:Interaction.Behaviors>
                 <Rectangle.Triggers>
                     <EventTrigger RoutedEvent="FrameworkElement.Loaded">

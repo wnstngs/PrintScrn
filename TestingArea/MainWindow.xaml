@@ -29,8 +29,8 @@
                    Height="40"/>
 
         <!-- Bottom-Right: 
-        X = RectangleWidth + WidthOfResizableArea + RectangleX
-        Y = RectangleHeight + WidthOfResizableArea + RectangleY
+        X = RectangleWidth - WidthOfResizableArea + RectangleX
+        Y = RectangleHeight - WidthOfResizableArea + RectangleY
         Width = WidthOfResizableArea * 2
         Height = WidthOfResizableArea * 2 -->
         <Rectangle Fill="Blue"
@@ -86,7 +86,7 @@
                    Height="40" />
 
         <!-- Left: 
-        X = RectY - WidthOfResizableArea
+        X = RectX - WidthOfResizableArea
         Y = RectY + WidthOfResizableArea
         Width = WidthOfResizableArea * 2
         Height = RectHeight - WidthOfResizableArea * 2 -->
